@@ -1,0 +1,80 @@
+        .history-timeline {
+            position: relative;
+            margin-top: 10px;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dfe7f1;
+        }
+
+        .history-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding: 16px 18px;
+            background: #f9fbfd;
+            border: 1px solid #e6edf5;
+            border-radius: 6px;
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-item::before {
+            content: "";
+            position: absolute;
+            left: -26px;
+            top: 18px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #26c6da;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 2px #dfe7f1;
+        }
+
+        .history-time {
+            display: block;
+            margin-bottom: 6px;
+            color: #7f8c9a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .history-title {
+            margin: 0 0 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #34425a;
+        }
+
+        .history-meta {
+            margin-bottom: 8px;
+        }
+
+        .history-meta .label {
+            margin-right: 6px;
+        }
+
+        .history-note {
+            margin: 0;
+            color: #5f6b7a;
+            line-height: 1.7;
+        }
+
+        .history-actor {
+            margin-top: 10px;
+            color: #7f8c9a;
+            font-size: 12px;
+        }
+
+        .history-toggle {
+            margin-bottom: 15px;
+        }

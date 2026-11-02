@@ -1,0 +1,138 @@
+$kind: http-request
+url: http://localhost:{{port}}/books/{{bookId}}
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test('response code should be 200', () => {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test('response header Content-Type should be application/json', () =>
+      {\r
+
+      \    pm.expect(pm.response.headers.get('Content-Type')).to.equals('applic\
+      ation/json; charset=utf-8');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should an object', () =>  {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    pm.expect(responseJson).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body object should contain correct property and value',
+      () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    \r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('status');\r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('data');\r
+
+      \r
+
+      \    pm.expect(responseJson.status).to.equals('success');\r
+
+      \    pm.expect(responseJson.data).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body data object should contain book object', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    const { data } = responseJson;\r
+
+      \r
+
+      \    pm.expect(data).to.haveOwnProperty('book');\r
+
+      \    pm.expect(data.book).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('book object should contain correct property and value', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    const { data: { book } } = responseJson;\r
+
+      \r
+
+      \    pm.expect(book).to.haveOwnProperty('id');\r
+
+      \    pm.expect(book).to.haveOwnProperty('name');\r
+
+      \    pm.expect(book).to.haveOwnProperty('year');\r
+
+      \    pm.expect(book).to.haveOwnProperty('author');\r
+
+      \    pm.expect(book).to.haveOwnProperty('summary');\r
+
+      \    pm.expect(book).to.haveOwnProperty('publisher');\r
+
+      \    pm.expect(book).to.haveOwnProperty('pageCount');\r
+
+      \    pm.expect(book).to.haveOwnProperty('readPage');\r
+
+      \    pm.expect(book).to.haveOwnProperty('finished');\r
+
+      \    pm.expect(book).to.haveOwnProperty('reading');\r
+
+      \    pm.expect(book).to.haveOwnProperty('insertedAt');\r
+
+      \    pm.expect(book).to.haveOwnProperty('updatedAt');\r
+
+      \r
+
+      \    pm.expect(book.id).to.equals(pm.environment.get('bookId'));\r
+
+      \    pm.expect(book.name).to.equals(pm.environment.get('newName'));\r
+
+      \    pm.expect(book.year).to.equals(Number(pm.environment.get('newYear'))\
+      );\r
+
+      \    pm.expect(book.author).to.equals(pm.environment.get('newAuthor'));\r
+
+      \    pm.expect(book.summary).to.equals(pm.environment.get('newSummary'));\
+      \r
+
+      \    pm.expect(book.publisher).to.equals(pm.environment.get('newPublisher\
+      '));\r
+
+      \    pm.expect(book.pageCount).to.equals(Number(pm.environment.get('newPa\
+      geCount')));\r
+
+      \    pm.expect(book.readPage).to.equals(Number(pm.environment.get('newRea\
+      dPage')));\r
+
+      \    pm.expect(book.finished).to.equals(pm.environment.get('newPageCount')
+      === pm.environment.get('newReadPage'));\r
+
+      \    pm.expect(book.reading).to.equals(pm.environment.get('newReading') ==
+      'true');\r
+
+      \    pm.expect(book.insertedAt).to.not.equals('');\r
+
+      \    pm.expect(book.updatedAt).to.not.equals('');\r
+
+      });"
+    language: text/javascript
+order: 6000

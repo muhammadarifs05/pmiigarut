@@ -1,0 +1,26 @@
+$kind: http-request
+name: Add Unreading Books and Unfinished Book "Dicoding" Name
+url: http://localhost:{{port}}/books
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"dicoding Jobs\",\r
+
+    \    \"year\": {{newYear}},\r
+
+    \    \"author\": \"{{newAuthor}}\",\r
+
+    \    \"summary\": \"{{newSummary}}\",\r
+
+    \    \"publisher\": \"{{newPublisher}}\",\r
+
+    \    \"pageCount\": 100,\r
+
+    \    \"readPage\": 0,\r
+
+    \    \"reading\": false\r
+
+    }"
+order: 18000

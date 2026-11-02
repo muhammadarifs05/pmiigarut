@@ -1,0 +1,53 @@
+$kind: http-request
+url: http://localhost:{{port}}/books/xxxxx
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "pm.test('status code should be 404', () => {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      pm.test('response header Content-Type should be application/json', () =>
+      {\r
+
+      \    pm.expect(pm.response.headers.get('Content-Type')).to.equals('applic\
+      ation/json; charset=utf-8');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should be an object', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    pm.expect(responseJson).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should have correct property and value', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    \r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('status');\r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('message');\r
+
+      \r
+
+      \    pm.expect(responseJson.status).to.equals('fail');\r
+
+      \    pm.expect(responseJson.message).to.equals('Buku gagal dihapus. Id
+      tidak ditemukan');\r
+
+      });"
+    language: text/javascript
+order: 15000

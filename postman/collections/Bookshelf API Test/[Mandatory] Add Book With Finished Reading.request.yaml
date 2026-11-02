@@ -1,0 +1,98 @@
+$kind: http-request
+url: http://localhost:{{port}}/books
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{newName}}\",\r
+
+    \    \"year\": {{newYear}},\r
+
+    \    \"author\": \"{{newAuthor}}\",\r
+
+    \    \"summary\": \"{{newSummary}}\",\r
+
+    \    \"publisher\": \"{{newPublisher}}\",\r
+
+    \    \"pageCount\": 100,\r
+
+    \    \"readPage\": 100,\r
+
+    \    \"reading\": {{newReading}}\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test('status code should be 201', () => {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.test('response header Content-Type should be application/json', () =>
+      {\r
+
+      \    pm.expect(pm.response.headers.get('Content-Type')).to.equals('applic\
+      ation/json; charset=utf-8');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should be an object', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    pm.expect(responseJson).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should have correct property and value', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    \r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('status');\r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('message');\r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('data');\r
+
+      \r
+
+      \    pm.expect(responseJson.status).to.equals('success');\r
+
+      \    pm.expect(responseJson.message).to.equals('Buku berhasil
+      ditambahkan');\r
+
+      \    pm.expect(responseJson.data).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body data should contain bookId', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    const { data } = responseJson;\r
+
+      \r
+
+      \    pm.expect(data).to.haveOwnProperty('bookId');\r
+
+      \    pm.expect(data.bookId).to.not.equals('');\r
+
+      \r
+
+      \    pm.environment.set('bookIdWithFinishedReading', data.bookId);\r
+
+      });"
+    language: text/javascript
+order: 2000

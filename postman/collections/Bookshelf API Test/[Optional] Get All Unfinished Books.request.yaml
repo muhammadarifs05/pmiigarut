@@ -1,0 +1,99 @@
+$kind: http-request
+url: http://localhost:{{port}}/books?finished=0
+method: GET
+queryParams:
+  finished: "0"
+scripts:
+  - type: afterResponse
+    code: "pm.test('status code should be 200', () => {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test('response header Content-Type should be application/json', () =>
+      {\r
+
+      \    pm.expect(pm.response.headers.get('Content-Type')).to.equals('applic\
+      ation/json; charset=utf-8');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should be an object', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    pm.expect(responseJson).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body object should have correct property and value', ()
+      => {\r
+
+      \    const responsJson = pm.response.json();\r
+
+      \r
+
+      \    pm.expect(responsJson).to.haveOwnProperty('status');\r
+
+      \    pm.expect(responsJson).to.haveOwnProperty('data');\r
+
+      \r
+
+      \    pm.expect(responsJson.status).to.equals('success');\r
+
+      \    pm.expect(responsJson.data).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body data object should have a array books and contains
+      3 items', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    const { data } = responseJson;\r
+
+      \r
+
+      \    pm.expect(data).to.haveOwnProperty('books');\r
+
+      \    pm.expect(data.books).to.be.an('array');\r
+
+      \    pm.expect(data.books).to.lengthOf(3);\r
+
+      });\r
+
+      \r
+
+      pm.test('the books should have contains only id, name, and publisher
+      property', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    const { data: { books } } = responseJson;\r
+
+      \r
+
+      \    books.forEach((book) => {\r
+
+      \        pm.expect(Object.keys(book)).to.lengthOf(3);\r
+
+      \        pm.expect(book).to.haveOwnProperty('id');\r
+
+      \        pm.expect(book).to.haveOwnProperty('name');\r
+
+      \        pm.expect(book).to.haveOwnProperty('publisher');\r
+
+      \    });\r
+
+      });"
+    language: text/javascript
+order: 23000

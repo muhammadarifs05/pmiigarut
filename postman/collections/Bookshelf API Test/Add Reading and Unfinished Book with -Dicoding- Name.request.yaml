@@ -1,0 +1,26 @@
+$kind: http-request
+name: Add Reading and Unfinished Book with "Dicoding" Name
+url: http://localhost:{{port}}/books
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Kelas Dicoding\",\r
+
+    \    \"year\": {{newYear}},\r
+
+    \    \"author\": \"{{newAuthor}}\",\r
+
+    \    \"summary\": \"{{newSummary}}\",\r
+
+    \    \"publisher\": \"{{newPublisher}}\",\r
+
+    \    \"pageCount\": 100,\r
+
+    \    \"readPage\": 99,\r
+
+    \    \"reading\": true\r
+
+    }"
+order: 17000

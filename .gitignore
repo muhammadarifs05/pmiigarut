@@ -1,0 +1,15 @@
+# Kredensial dan Konfigurasi Sensitif
+.env
+
+# Package / Dependency
+/vendor/
+
+# Folder Writable & Log
+/writable/debugbar/
+/writable/cache/
+/writable/logs/
+/writable/session/
+/writable/uploads/
+
+# File Database / Postman jika ada data sensitif
+/db/*.sql

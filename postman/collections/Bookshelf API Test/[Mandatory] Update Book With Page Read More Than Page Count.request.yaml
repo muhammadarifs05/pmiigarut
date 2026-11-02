@@ -1,0 +1,76 @@
+$kind: http-request
+url: http://localhost:{{port}}/books/{{bookId}}
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{updateName}}\",\r
+
+    \    \"year\": {{updateYear}},\r
+
+    \    \"author\": \"{{updateAuthor}}\",\r
+
+    \    \"summary\": \"{{updateSummary}}\",\r
+
+    \    \"publisher\": \"{{updatePublisher}}\",\r
+
+    \    \"pageCount\": 80,\r
+
+    \    \"readPage\": 90,\r
+
+    \    \"reading\": {{updateReading}}\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test('status code should be 400', () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });\r
+
+      \r
+
+      pm.test('response header Content-Type should be application/json', () =>
+      {\r
+
+      \    pm.expect(pm.response.headers.get('Content-Type')).to.equals('applic\
+      ation/json; charset=utf-8');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should be an object', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    pm.expect(responseJson).to.be.an('object');\r
+
+      });\r
+
+      \r
+
+      pm.test('response body should have correct property and value', () => {\r
+
+      \    const responseJson = pm.response.json();\r
+
+      \    \r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('status');\r
+
+      \    pm.expect(responseJson).to.haveOwnProperty('message');\r
+
+      \    pm.expect(responseJson).to.not.haveOwnProperty('data');\r
+
+      \r
+
+      \    pm.expect(responseJson.status).to.equals('fail');\r
+
+      \    pm.expect(responseJson.message).to.equals('Gagal memperbarui buku.
+      readPage tidak boleh lebih besar dari pageCount');\r
+
+      });"
+    language: text/javascript
+order: 11000

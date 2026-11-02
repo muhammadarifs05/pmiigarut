@@ -1,0 +1,25 @@
+$kind: http-request
+url: http://localhost:{{port}}/books
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{newName}}\",\r
+
+    \    \"year\": {{newYear}},\r
+
+    \    \"author\": \"{{newAuthor}}\",\r
+
+    \    \"summary\": \"{{newSummary}}\",\r
+
+    \    \"publisher\": \"{{newPublisher}}\",\r
+
+    \    \"pageCount\": 100,\r
+
+    \    \"readPage\": 100,\r
+
+    \    \"reading\": true\r
+
+    }"
+order: 16000
