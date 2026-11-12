@@ -1,3 +1,7 @@
+<?php
+/** @var string $title */
+?>
+
 <!DOCTYPE html>
 <html>
 

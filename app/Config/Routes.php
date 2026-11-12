@@ -20,6 +20,15 @@ $routes->post('/cek-status-pengajuan/hasil', 'PermohonanSkController::hasilStatu
 $routes->get('/permohonan-sk/upload-ulang/(:segment)', 'PermohonanSkController::formUploadUlang/$1');
 $routes->post('/permohonan-sk/upload-ulang/(:segment)', 'PermohonanSkController::submitUploadUlang/$1');
 
+// Layanan KTA Publik
+$routes->get('kta/pengajuan', 'Kta::pengajuan');
+$routes->post('kta/store', 'Kta::store');
+$routes->get('kta/sukses/(:segment)', 'Kta::sukses/$1');
+$routes->get('kta/cek-status', 'Kta::cekStatus');
+$routes->post('kta/cek-status', 'Kta::hasilStatus');
+$routes->get('kta/download-pdf/(:segment)', 'Kta::downloadPdf/$1'); // <-- TAMBAHKAN INI
+$routes->get('verify/(:segment)', 'Kta::verify/$1');
+
 // SubscribeController
 $routes->get('subscribe', static function () {
     return redirect()->to('/#footer');
@@ -101,6 +110,14 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
         $routes->get('(:num)/preview/(:segment)', 'Admin\PengajuanSkController::previewFile/$1/$2');
         $routes->get('(:num)/download/(:segment)', 'Admin\PengajuanSkController::downloadFile/$1/$2');
         $routes->delete('', 'Admin\PengajuanSkController::delete');
+    });
+    // Kelola Pengajuan KTA
+    $routes->group('kta', static function ($routes) {
+        $routes->get('', 'Admin\KtaAdmin::index');
+        $routes->get('(:num)/detail', 'Admin\KtaAdmin::detail/$1');
+        $routes->post('(:num)/update-status', 'Admin\KtaAdmin::updateStatus/$1');
+        $routes->get('pdf/(:num)', 'Admin\KtaAdmin::exportPdf/$1');
+        $routes->delete('', 'Admin\KtaAdmin::delete');
     });
     // Inbox Route
     $routes->group('inbox', static function ($routes) {

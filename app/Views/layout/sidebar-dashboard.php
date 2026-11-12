@@ -141,6 +141,14 @@
                 </li>
             <?php endif; ?>
             <?php if (session('role') == 'admin') : ?>
+                <li>
+                    <a href="/admin/kta" class="waves-effect waves-button">
+                        <span class="menu-icon icon-credit-card"></span>
+                        <p>Pengajuan KTA</p>
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if (session('role') == 'admin') : ?>
                 <li class="<?= ($active == 'inbox') ? 'active' : '' ?>">
                     <a href="/<?= session('role'); ?>/inbox" class="waves-effect waves-button"><span class="menu-icon icon-envelope"></span>
                         <p>Inbox</p>

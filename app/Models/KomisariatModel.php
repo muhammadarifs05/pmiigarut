@@ -13,6 +13,7 @@ class KomisariatModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
+        'kode_komisariat', // Ditambahkan agar kolom kode_komisariat bisa diakses Model
         'nama_komisariat',
         'kampus_fakultas',
         'nama_ketua',
@@ -27,10 +28,13 @@ class KomisariatModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
+    /**
+     * Mengambil daftar komisariat yang aktif untuk pilihan dropdown pengajuan KTA
+     */
     public function getActiveKomisariat()
     {
         return $this->where('status_aktif', 'aktif')
-            ->orderBy('id', 'ASC')
+            ->orderBy('kode_komisariat', 'ASC')
             ->findAll();
     }
 }

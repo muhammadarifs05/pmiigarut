@@ -55,18 +55,18 @@ $postsData = $posts ?? [];
             </div>
 
             <div class="row public-service-grid justify-content-center">
-                <div class="col-lg-6 col-md-6 d-flex align-items-stretch">
+
+                <!-- 1. Kotak Daftar Komisariat (Ubah col-lg-6 jadi col-lg-4) -->
+                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                     <div class="icon-box public-service-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="public-service-top">
                             <div class="icon"><i class="bx bx-building-house"></i></div>
                             <span class="service-kind">Informasi Publik</span>
                         </div>
-
                         <h4 class="title">Daftar Komisariat</h4>
                         <p class="description">
                             Lihat daftar komisariat aktif PMII Garut beserta kampus atau fakultas dan nama ketuanya sebagai informasi publik.
                         </p>
-
                         <div class="service-actions">
                             <a href="/komisariat" class="service-link">
                                 Lihat Daftar
@@ -76,18 +76,17 @@ $postsData = $posts ?? [];
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 d-flex align-items-stretch">
+                <!-- 2. Kotak Permohonan SK (Ubah col-lg-6 jadi col-lg-4) -->
+                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                     <div class="icon-box public-service-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="public-service-top">
                             <div class="icon"><i class="bx bx-file-find"></i></div>
                             <span class="service-kind">Layanan Pengajuan</span>
                         </div>
-
                         <h4 class="title">Permohonan SK Pengurus Komisariat</h4>
                         <p class="description">
                             Ajukan permohonan SK Pengurus Komisariat secara online dengan melengkapi seluruh dokumen persyaratan yang dibutuhkan.
                         </p>
-
                         <div class="service-actions">
                             <a href="/permohonan-sk" class="service-link">
                                 Ajukan Sekarang
@@ -96,6 +95,27 @@ $postsData = $posts ?? [];
                         </div>
                     </div>
                 </div>
+
+                <!-- 3. Kotak Pengajuan KTA (KOTAK BARU) -->
+                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                    <div class="icon-box public-service-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="public-service-top">
+                            <div class="icon"><i class="bx bx-id-card"></i></div>
+                            <span class="service-kind">Layanan Pengajuan</span>
+                        </div>
+                        <h4 class="title">Pengajuan KTA Digital</h4>
+                        <p class="description">
+                            Ajukan pembuatan Kartu Tanda Anggota (KTA) PMII Cabang Garut secara online dengan melengkapi data diri yang valid.
+                        </p>
+                        <div class="service-actions">
+                            <a href="/kta/pengajuan" class="service-link">
+                                Ajukan Sekarang
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
