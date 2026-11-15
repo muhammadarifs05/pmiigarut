@@ -100,6 +100,18 @@ class Kta extends BaseController
             ],
         ];
 
+        $nik = trim((string) $this->request->getPost('nik'));
+        $existingKta = $this->ktaRequestModel
+            ->where('nik', $nik)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
+
+        if ($existingKta) {
+            return redirect()->back()->withInput()->with('errors', [
+                'nik' => 'NIK ini sudah terdaftar pada pengajuan aktif atau sudah memiliki KTA. Silakan cek pada menu Cek Status Pengajuan.',
+            ]);
+        }
+
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }

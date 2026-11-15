@@ -5,6 +5,12 @@
  * @var array $pengajuan
  */
 $pengajuanData = $pengajuan ?? [];
+$jenisKelaminLabel = '-';
+if (($pengajuanData['jenis_kelamin'] ?? '') === 'L') {
+    $jenisKelaminLabel = 'Laki-laki';
+} elseif (($pengajuanData['jenis_kelamin'] ?? '') === 'P') {
+    $jenisKelaminLabel = 'Perempuan';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,12 +46,10 @@ $pengajuanData = $pengajuan ?? [];
     <div class="overlay"></div>
     <main class="page-content content-wrap">
 
-        <!-- Memanggil Sidebar Bawaan -->
         <?= $this->include('layout/sidebar-dashboard'); ?>
 
         <div class="page-inner">
 
-            <!-- Memanggil Title/Header Bawaan -->
             <?= $this->include('layout/title-dashboard'); ?>
 
             <div id="main-wrapper">
@@ -60,23 +64,43 @@ $pengajuanData = $pengajuan ?? [];
                                 <a href="/admin/kta" class="btn btn-default m-b-sm">Kembali</a>
 
                                 <div class="row">
+                                    <!-- Kolom Data Lengkap Pemohon -->
                                     <div class="col-md-6">
                                         <table class="table table-bordered">
                                             <tr>
-                                                <th width="180">Token Pelacakan</th>
-                                                <td><code><?= esc($pengajuanData['uuid_token'] ?? '-'); ?></code></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nama Lengkap</th>
-                                                <td><?= esc($pengajuanData['nama_lengkap'] ?? '-'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>NIK</th>
+                                                <th width="190">NIK</th>
                                                 <td><?= esc($pengajuanData['nik'] ?? '-'); ?></td>
                                             </tr>
                                             <tr>
-                                                <th>Komisariat</th>
+                                                <th>Nama Lengkap</th>
+                                                <td><strong><?= esc($pengajuanData['nama_lengkap'] ?? '-'); ?></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tempat, Tanggal Lahir</th>
+                                                <td>
+                                                    <?= esc($pengajuanData['tempat_lahir'] ?? '-'); ?>,
+                                                    <?= ! empty($pengajuanData['tanggal_lahir']) ? date('d M Y', strtotime($pengajuanData['tanggal_lahir'])) : '-'; ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Jenis Kelamin</th>
+                                                <td><?= esc($jenisKelaminLabel); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Asal Komisariat</th>
                                                 <td><?= esc($pengajuanData['nama_komisariat'] ?? '-'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Asal Rayon</th>
+                                                <td><?= esc(! empty($pengajuanData['rayon']) ? $pengajuanData['rayon'] : '-'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tahun Mapaba</th>
+                                                <td><?= esc($pengajuanData['tahun_mapaba'] ?? '-'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tanggal Pengajuan</th>
+                                                <td><?= esc($pengajuanData['created_at'] ?? '-'); ?></td>
                                             </tr>
                                             <tr>
                                                 <th>Status Pengajuan</th>
@@ -94,13 +118,16 @@ $pengajuanData = $pengajuan ?? [];
                                             </tr>
                                             <?php if (($pengajuanData['status'] ?? '') === 'approved') : ?>
                                                 <tr>
-                                                    <th>Nomor KTA</th>
+                                                    <th>Nomor KTA (NIA)</th>
                                                     <td><strong><?= esc($pengajuanData['nomor_kta'] ?? '-'); ?></strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tanggal Disetujui</th>
+                                                    <td><?= esc($pengajuanData['approved_at'] ?? '-'); ?></td>
                                                 </tr>
                                             <?php endif; ?>
                                         </table>
 
-                                        <!-- Tombol Cetak KTA PDF -->
                                         <?php if (($pengajuanData['status'] ?? '') === 'approved') : ?>
                                             <a href="/admin/kta/pdf/<?= esc($pengajuanData['id']); ?>" target="_blank" class="btn btn-primary" style="margin-top: 10px;">
                                                 <i class="fa fa-print"></i> Cetak PDF KTA
@@ -108,8 +135,8 @@ $pengajuanData = $pengajuan ?? [];
                                         <?php endif; ?>
                                     </div>
 
+                                    <!-- Kolom Form Verifikasi Admin -->
                                     <div class="col-md-6">
-                                        <!-- Form Update Status -->
                                         <form action="/admin/kta/<?= esc($pengajuanData['id'] ?? ''); ?>/update-status" method="post">
                                             <?= csrf_field(); ?>
 
@@ -124,7 +151,7 @@ $pengajuanData = $pengajuan ?? [];
 
                                             <div class="form-group">
                                                 <label>Catatan Admin (Opsional)</label>
-                                                <textarea name="catatan_admin" class="form-control" rows="5" placeholder="Berikan catatan jika ditolak..."><?= esc(old('catatan_admin', $pengajuanData['catatan_admin'] ?? '')); ?></textarea>
+                                                <textarea name="catatan_admin" class="form-control" rows="5" placeholder="Tulis catatan untuk pemohon bila ditolak atau perlu perbaikan..."><?= esc(old('catatan_admin', $pengajuanData['catatan_admin'] ?? '')); ?></textarea>
                                             </div>
 
                                             <button type="submit" class="btn btn-success">Simpan Status</button>
@@ -134,23 +161,46 @@ $pengajuanData = $pengajuan ?? [];
 
                                 <hr>
 
+                                <!-- Tabel Dokumen Lampiran + Preview & Download -->
                                 <h4 class="m-b-md">Dokumen Lampiran Kader</h4>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Nama Dokumen</th>
-                                                <th width="220">Status Upload</th>
+                                                <th width="220">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>Pasfoto Formal</td>
-                                                <td><span class="label label-info">File Tersimpan</span></td>
+                                                <td>
+                                                    <?php if (! empty($pengajuanData['pas_foto'])) : ?>
+                                                        <a href="/admin/kta/<?= esc($pengajuanData['id']); ?>/preview/pas_foto" class="btn btn-xs btn-info" target="_blank">
+                                                            <i class="fa fa-eye"></i> Preview
+                                                        </a>
+                                                        <a href="/admin/kta/<?= esc($pengajuanData['id']); ?>/download/pas_foto" class="btn btn-xs btn-success">
+                                                            <i class="fa fa-download"></i> Download
+                                                        </a>
+                                                    <?php else : ?>
+                                                        <span class="label label-default">File tidak tersedia</span>
+                                                    <?php endif; ?>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Sertifikat Mapaba / Surat Bukti</td>
-                                                <td><span class="label label-info">File Tersimpan</span></td>
+                                                <td>
+                                                    <?php if (! empty($pengajuanData['berkas_bukti'])) : ?>
+                                                        <a href="/admin/kta/<?= esc($pengajuanData['id']); ?>/preview/berkas_bukti" class="btn btn-xs btn-info" target="_blank">
+                                                            <i class="fa fa-eye"></i> Preview
+                                                        </a>
+                                                        <a href="/admin/kta/<?= esc($pengajuanData['id']); ?>/download/berkas_bukti" class="btn btn-xs btn-success">
+                                                            <i class="fa fa-download"></i> Download
+                                                        </a>
+                                                    <?php else : ?>
+                                                        <span class="label label-default">File tidak tersedia</span>
+                                                    <?php endif; ?>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -168,7 +218,6 @@ $pengajuanData = $pengajuan ?? [];
         </div>
     </main>
 
-    <!-- Scripts Bawaan -->
     <script src="/assets/backend/plugins/jquery/jquery-2.1.4.min.js"></script>
     <script src="/assets/backend/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script src="/assets/backend/plugins/pace-master/pace.min.js"></script>
@@ -184,12 +233,11 @@ $pengajuanData = $pengajuan ?? [];
     <script src="/assets/backend/js/modern.min.js"></script>
     <script src="/assets/backend/plugins/toastr/jquery.toast.min.js"></script>
 
-    <!-- Notifikasi Toastr jika status berhasil diubah -->
     <?php if (session()->getFlashData('msg') == 'status-updated') : ?>
         <script>
             $.toast({
                 heading: 'Success',
-                text: "Status pengajuan berhasil diperbarui!",
+                text: "Status pengajuan KTA berhasil diperbarui!",
                 showHideTransition: 'slide',
                 icon: 'success',
                 hideAfter: false,

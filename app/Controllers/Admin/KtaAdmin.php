@@ -109,6 +109,53 @@ class KtaAdmin extends BaseController
         return redirect()->to('/admin/kta/' . $id . '/detail')->with('msg', 'status-updated');
     }
 
+    public function previewFile(int $id, string $field)
+    {
+        if (! in_array($field, ['pas_foto', 'berkas_bukti'], true)) {
+            throw PageNotFoundException::forPageNotFound('Field file tidak valid.');
+        }
+
+        $pengajuan = $this->ktaRequestModel->find($id);
+
+        if (! $pengajuan || empty($pengajuan[$field])) {
+            throw PageNotFoundException::forPageNotFound('Data file tidak ditemukan.');
+        }
+
+        $fullPath = $this->resolveFilePath($field, (string) $pengajuan[$field]);
+
+        if ($fullPath === null) {
+            throw PageNotFoundException::forPageNotFound('File tidak ditemukan di server.');
+        }
+
+        $mimeType = mime_content_type($fullPath) ?: 'application/octet-stream';
+
+        return $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Content-Disposition', 'inline; filename="' . basename($fullPath) . '"')
+            ->setBody(file_get_contents($fullPath));
+    }
+
+    public function downloadFile(int $id, string $field)
+    {
+        if (! in_array($field, ['pas_foto', 'berkas_bukti'], true)) {
+            throw PageNotFoundException::forPageNotFound('Field file tidak valid.');
+        }
+
+        $pengajuan = $this->ktaRequestModel->find($id);
+
+        if (! $pengajuan || empty($pengajuan[$field])) {
+            throw PageNotFoundException::forPageNotFound('Data file tidak ditemukan.');
+        }
+
+        $fullPath = $this->resolveFilePath($field, (string) $pengajuan[$field]);
+
+        if ($fullPath === null) {
+            throw PageNotFoundException::forPageNotFound('File tidak ditemukan di server.');
+        }
+
+        return $this->response->download($fullPath, null);
+    }
+
     public function delete()
     {
         $id        = (int) $this->request->getPost('id');
@@ -118,23 +165,48 @@ class KtaAdmin extends BaseController
             return redirect()->to('/admin/kta')->with('msg', 'error-notfound');
         }
 
-        if (! empty($pengajuan['pas_foto'])) {
-            $fotoPath = WRITEPATH . 'uploads/kta/pasfoto/' . $pengajuan['pas_foto'];
-            if (is_file($fotoPath)) {
-                unlink($fotoPath);
-            }
-        }
-
-        if (! empty($pengajuan['berkas_bukti'])) {
-            $berkasPath = WRITEPATH . 'uploads/kta/berkas/' . $pengajuan['berkas_bukti'];
-            if (is_file($berkasPath)) {
-                unlink($berkasPath);
+        foreach (['pas_foto', 'berkas_bukti'] as $field) {
+            if (! empty($pengajuan[$field])) {
+                $filePath = $this->resolveFilePath($field, (string) $pengajuan[$field]);
+                if ($filePath !== null && is_file($filePath)) {
+                    unlink($filePath);
+                }
             }
         }
 
         $this->ktaRequestModel->delete($id);
 
         return redirect()->to('/admin/kta')->with('msg', 'success-delete');
+    }
+
+    private function resolveFilePath(string $field, string $storedValue): ?string
+    {
+        $cleanValue = ltrim(str_replace(['\\', '../'], ['/', ''], $storedValue), '/');
+
+        $candidates = [
+            WRITEPATH . $cleanValue,
+            FCPATH . $cleanValue,
+        ];
+
+        if ($field === 'pas_foto') {
+            $candidates[] = WRITEPATH . 'uploads/kta/pasfoto/' . basename($cleanValue);
+            $candidates[] = FCPATH . 'uploads/kta/pasfoto/' . basename($cleanValue);
+        } else {
+            $candidates[] = WRITEPATH . 'uploads/kta/berkas/' . basename($cleanValue);
+            $candidates[] = WRITEPATH . 'uploads/kta/sertifikat/' . basename($cleanValue);
+            $candidates[] = WRITEPATH . 'uploads/kta/bukti/' . basename($cleanValue);
+            $candidates[] = WRITEPATH . 'uploads/kta/' . basename($cleanValue);
+            $candidates[] = FCPATH . 'uploads/kta/berkas/' . basename($cleanValue);
+            $candidates[] = FCPATH . 'uploads/kta/sertifikat/' . basename($cleanValue);
+        }
+
+        foreach ($candidates as $path) {
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     public function exportPdf(int $id)

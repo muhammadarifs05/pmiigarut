@@ -116,6 +116,8 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
         $routes->get('', 'Admin\KtaAdmin::index');
         $routes->get('(:num)/detail', 'Admin\KtaAdmin::detail/$1');
         $routes->post('(:num)/update-status', 'Admin\KtaAdmin::updateStatus/$1');
+        $routes->get('(:num)/preview/(:segment)', 'Admin\KtaAdmin::previewFile/$1/$2');
+        $routes->get('(:num)/download/(:segment)', 'Admin\KtaAdmin::downloadFile/$1/$2');
         $routes->get('pdf/(:num)', 'Admin\KtaAdmin::exportPdf/$1');
         $routes->delete('', 'Admin\KtaAdmin::delete');
     });
