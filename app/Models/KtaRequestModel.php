@@ -19,6 +19,7 @@ class KtaRequestModel extends Model
         'nama_lengkap',
         'tempat_lahir',
         'tanggal_lahir',
+        'alamat',
         'jenis_kelamin',
         'komisariat_id',
         'rayon',
@@ -62,15 +63,14 @@ class KtaRequestModel extends Model
      */
     public function getRequestsWithKomisariat(?int $id = null)
     {
-        $builder = $this->db->table($this->table)
-            ->select('kta_requests.*, komisariat.nama_komisariat, komisariat.kode_komisariat')
-            ->join('komisariat', 'komisariat.id = kta_requests.komisariat_id');
+        $builder = $this->select('kta_requests.*, komisariat.nama_komisariat, komisariat.kode_komisariat, komisariat.kampus_fakultas')
+            ->join('komisariat', 'komisariat.id = kta_requests.komisariat_id', 'left');
 
         if ($id !== null) {
-            return $builder->where('kta_requests.id', $id)->get()->getRowArray();
+            return $builder->where('kta_requests.id', $id)->first();
         }
 
-        return $builder->orderBy('kta_requests.id', 'DESC')->get()->getResultArray();
+        return $builder->orderBy('kta_requests.id', 'DESC')->findAll();
     }
 
     /**

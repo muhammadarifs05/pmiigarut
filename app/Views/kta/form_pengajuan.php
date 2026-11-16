@@ -102,6 +102,13 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="form-group col-md-12 mb-3">
+                                        <label for="alamat" class="form-label fw-bold">Alamat Lengkap</label>
+                                        <input type="text" name="alamat" class="form-control" id="alamat" value="<?= old('alamat') ?>" required placeholder="Contoh: Jl. Pembangunan No. 12, Tarogong Kidul, Kab. Garut">
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="form-group col-md-6 mb-3">
                                         <label for="jenis_kelamin" class="form-label fw-bold">Jenis Kelamin</label>
                                         <select name="jenis_kelamin" class="form-control" id="jenis_kelamin" required>
@@ -136,8 +143,11 @@
 
                                 <div class="row">
                                     <div class="form-group col-md-6 mb-3">
-                                        <label for="pas_foto" class="form-label fw-bold">Pasfoto Formal (Format JPG/PNG, Max 2MB)</label>
+                                        <label for="pas_foto" class="form-label fw-bold">Pasfoto Formal 3x4, Latar Biru (Format JPG/PNG, Max 2MB)</label>
                                         <input type="file" name="pas_foto" class="form-control" id="pas_foto" accept="image/*" required>
+                                        <small class="text-muted d-block mt-1">
+                                            Gunakan pasfoto resmi berjas PMII dengan ukuran foto <strong>3x4</strong> (ukuran ideal <strong>450 × 600 piksel</strong>). <strong>Latar Belakang Biru.</strong>
+                                        </small>
                                     </div>
                                     <div class="form-group col-md-6 mb-3">
                                         <label for="berkas_bukti" class="form-label fw-bold">Bukti Sertifikat Mapaba (JPG/PNG/PDF, Max 2MB)</label>

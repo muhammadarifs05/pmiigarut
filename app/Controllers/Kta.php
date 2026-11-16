@@ -70,6 +70,13 @@ class Kta extends BaseController
                 'rules'  => 'required|valid_date',
                 'errors' => ['required' => 'Tanggal lahir wajib diisi.'],
             ],
+            'alamat' => [
+                'rules'  => 'required|min_length[5]',
+                'errors' => [
+                    'required'   => 'Alamat lengkap wajib diisi.',
+                    'min_length' => 'Alamat minimal 5 karakter.',
+                ],
+            ],
             'jenis_kelamin' => [
                 'rules'  => 'required|in_list[L,P]',
                 'errors' => ['required' => 'Pilih jenis kelamin.'],
@@ -136,6 +143,7 @@ class Kta extends BaseController
             'nama_lengkap'  => $this->request->getPost('nama_lengkap'),
             'tempat_lahir'  => $this->request->getPost('tempat_lahir'),
             'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
+            'alamat'        => $this->request->getPost('alamat'),
             'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
             'komisariat_id' => $this->request->getPost('komisariat_id'),
             'rayon'         => $this->request->getPost('rayon'),
@@ -174,12 +182,12 @@ class Kta extends BaseController
     public function verify(string $uuidToken)
     {
         $kader = $this->ktaRequestModel->getByUuid($uuidToken);
-        $site = $this->siteModel->find(1);
+        $site  = $this->siteModel->find(1);
 
         if (! $kader) {
             return view('kta/verify_invalid', [
                 'title' => 'Verifikasi KTA - Data Tidak Ditemukan',
-                'site'  => $site
+                'site'  => $site,
             ]);
         }
 
@@ -195,6 +203,7 @@ class Kta extends BaseController
 
         return view('kta/verify', $data);
     }
+
     /**
      * Halaman Form Cek Status KTA
      */
@@ -231,9 +240,14 @@ class Kta extends BaseController
             return redirect()->back()->withInput()->with('error', 'Data pengajuan tidak ditemukan. Periksa kembali NIK dan Tanggal Lahir Anda.');
         }
 
-        // Ambil nama komisariat
+        // Ambil nama komisariat & kampus
         $komisariat = $this->komisariatModel->find($pengajuan['komisariat_id']);
         $pengajuan['nama_komisariat'] = $komisariat['nama_komisariat'] ?? '-';
+        $pengajuan['kampus_fakultas'] = $komisariat['kampus_fakultas'] ?? '';
+
+        // Siapkan Logo PMII Base64
+        $logoPath   = FCPATH . 'assets/frontend/img/apple-touch-icon2.png';
+        $logoBase64 = is_file($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
 
         // Jika sudah disetujui, siapkan QR Code & Pasfoto Base64 untuk pratinjau & unduh JPG
         $qrBase64   = '';
@@ -253,13 +267,14 @@ class Kta extends BaseController
         }
 
         $data = [
-            'title'         => 'Hasil Cek Status KTA - PC PMII Garut',
-            'site'          => $this->siteModel->find(1),
-            'pengajuan'     => $pengajuan,
-            'nik_input'     => $nik,
-            'tgl_input'     => $tanggalLahir,
-            'qrBase64'      => $qrBase64,
-            'fotoBase64'    => $fotoBase64,
+            'title'      => 'Hasil Cek Status KTA - PC PMII Garut',
+            'site'       => $this->siteModel->find(1),
+            'pengajuan'  => $pengajuan,
+            'nik_input'  => $nik,
+            'tgl_input'  => $tanggalLahir,
+            'qrBase64'   => $qrBase64,
+            'fotoBase64' => $fotoBase64,
+            'logoBase64' => $logoBase64,
         ];
 
         return view('kta/cek_status', $data);
@@ -278,6 +293,7 @@ class Kta extends BaseController
 
         $komisariat = $this->komisariatModel->find($kader['komisariat_id']);
         $kader['nama_komisariat'] = $komisariat['nama_komisariat'] ?? '-';
+        $kader['kampus_fakultas'] = $komisariat['kampus_fakultas'] ?? '';
 
         // Generate QR Code Base64
         $urlVerify = base_url('verify/' . $kader['uuid_token']);
@@ -293,11 +309,15 @@ class Kta extends BaseController
             $fotoBase64 = 'data:image/' . $fotoType . ';base64,' . base64_encode(file_get_contents($fotoPath));
         }
 
-        // Gunakan ulang template PDF KTA yang sudah ada
+        // Siapkan Logo PMII Base64
+        $logoPath   = FCPATH . 'assets/frontend/img/apple-touch-icon2.png';
+        $logoBase64 = is_file($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+
         $html = view('admin/kta/pdf_template', [
             'kader'      => $kader,
             'qrBase64'   => $qrBase64,
             'fotoBase64' => $fotoBase64,
+            'logoBase64' => $logoBase64,
         ]);
 
         $dompdf = new Dompdf();

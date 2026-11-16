@@ -7,7 +7,6 @@ use App\Models\CommentModel;
 use App\Models\InboxModel;
 use App\Models\KtaRequestModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use Dompdf\Dompdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -221,23 +220,23 @@ class KtaAdmin extends BaseController
         $writer    = new PngWriter();
         $qrBase64  = $writer->write($qrCode)->getDataUri();
 
-        $fotoPath   = WRITEPATH . 'uploads/kta/pasfoto/' . $kader['pas_foto'];
         $fotoBase64 = '';
-        if (is_file($fotoPath)) {
-            $fotoType   = pathinfo($fotoPath, PATHINFO_EXTENSION);
-            $fotoBase64 = 'data:image/' . $fotoType . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        if (! empty($kader['pas_foto'])) {
+            $fotoPath = $this->resolveFilePath('pas_foto', (string) $kader['pas_foto']);
+            if ($fotoPath !== null && is_file($fotoPath)) {
+                $mimeType   = mime_content_type($fotoPath) ?: 'image/jpeg';
+                $fotoBase64 = 'data:' . $mimeType . ';base64,' . base64_encode(file_get_contents($fotoPath));
+            }
         }
 
-        $html = view('admin/kta/pdf_template', [
+        $logoPath   = FCPATH . 'assets/frontend/img/apple-touch-icon2.png';
+        $logoBase64 = is_file($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+
+        return view('admin/kta/pdf_template', [
             'kader'      => $kader,
             'qrBase64'   => $qrBase64,
             'fotoBase64' => $fotoBase64,
+            'logoBase64' => $logoBase64,
         ]);
-
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper([0, 0, 242.64, 153.00], 'landscape');
-        $dompdf->render();
-        $dompdf->stream('KTA_PMII_' . str_replace('.', '', $kader['nomor_kta']) . '.pdf', ['Attachment' => false]);
     }
 }

@@ -83,6 +83,10 @@ if (($pengajuanData['jenis_kelamin'] ?? '') === 'L') {
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <th>Alamat Lengkap</th>
+                                                <td><?= esc(! empty($pengajuanData['alamat']) ? $pengajuanData['alamat'] : '-'); ?></td>
+                                            </tr>
+                                            <tr>
                                                 <th>Jenis Kelamin</th>
                                                 <td><?= esc($jenisKelaminLabel); ?></td>
                                             </tr>
