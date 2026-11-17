@@ -87,25 +87,72 @@ class KtaAdmin extends BaseController
             'catatan_admin' => $catatanAdmin !== '' ? $catatanAdmin : null,
         ];
 
+        $db = \Config\Database::connect();
+        $db->transStart();
+
         if ($statusBaru === 'approved' && empty($pengajuan['nomor_kta'])) {
             $req            = $this->ktaRequestModel->getRequestsWithKomisariat($id);
-            $kodeKomisariat = $req['kode_komisariat'] ?? '00';
-            $tahunMapaba    = $req['tahun_mapaba'];
+            $kodeKomisariat = (string) ($req['kode_komisariat'] ?? '00');
+            $tahunMapaba    = (string) ($req['tahun_mapaba'] ?? date('Y'));
 
-            $count = $this->ktaRequestModel
-                ->where('komisariat_id', $req['komisariat_id'])
-                ->where('tahun_mapaba', $tahunMapaba)
-                ->where('status', 'approved')
-                ->countAllResults();
-
-            $nomorUrut                 = str_pad((string) ($count + 1), 4, '0', STR_PAD_LEFT);
-            $updateData['nomor_kta']   = "32.05.{$kodeKomisariat}.{$tahunMapaba}.{$nomorUrut}";
+            $updateData['nomor_kta']   = $this->generateUniqueNia($kodeKomisariat, $tahunMapaba);
             $updateData['approved_at'] = date('Y-m-d H:i:s');
         }
 
         $this->ktaRequestModel->update($id, $updateData);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->to('/admin/kta/' . $id . '/detail')->with('error', 'Gagal memproses persetujuan dan pembuatan NIA.');
+        }
 
         return redirect()->to('/admin/kta/' . $id . '/detail')->with('msg', 'status-updated');
+    }
+
+    /**
+     * Menghasilkan NIA unik tanpa pemisah: [4 Digit Tahun MAPABA] + V02 + [2 Digit Kode Komisariat] + [4 Digit Urut]
+     * Contoh: 2024V02040001
+     */
+    private function generateUniqueNia(string $kodeKomisariat, string $tahunMapaba): string
+    {
+        $tahunClean = substr(preg_replace('/\D/', '', $tahunMapaba), 0, 4);
+        $tahun4     = str_pad($tahunClean !== '' ? $tahunClean : date('Y'), 4, '0', STR_PAD_LEFT);
+
+        $kodeClean = preg_replace('/\D/', '', $kodeKomisariat);
+        $kode2     = str_pad($kodeClean !== '' ? substr($kodeClean, -2) : '00', 2, '0', STR_PAD_LEFT);
+
+        // Prefix 9 karakter: contoh "2024V0204"
+        $prefix = $tahun4 . 'V02' . $kode2;
+
+        // Ambil seluruh NIA yang sudah terbit dengan prefix angkatan & komisariat yang sama
+        $existingRows = $this->ktaRequestModel
+            ->select('nomor_kta')
+            ->like('nomor_kta', $prefix, 'after')
+            ->findAll();
+
+        $maxUrut = 0;
+        foreach ($existingRows as $row) {
+            $nia = (string) ($row['nomor_kta'] ?? '');
+            if (strpos($nia, $prefix) === 0) {
+                $tail = (int) substr($nia, strlen($prefix), 4);
+                if ($tail > $maxUrut) {
+                    $maxUrut = $tail;
+                }
+            }
+        }
+
+        $nextUrut = $maxUrut + 1;
+
+        // Pastikan NIA benar-benar belum ada di database sebelum dikembalikan
+        do {
+            $candidateNia = $prefix . str_pad((string) $nextUrut, 4, '0', STR_PAD_LEFT);
+            $isDuplicate  = $this->ktaRequestModel
+                ->where('nomor_kta', $candidateNia)
+                ->countAllResults() > 0;
+            $nextUrut++;
+        } while ($isDuplicate);
+
+        return $candidateNia;
     }
 
     public function previewFile(int $id, string $field)

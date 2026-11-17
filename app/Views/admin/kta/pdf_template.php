@@ -588,7 +588,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
 
             <div class="kta-f-bio">
                 <div class="kta-f-nama"><?= esc($kader['nama_lengkap'] ?? '-') ?></div>
-                <div class="kta-f-nia"><span>NIA</span> <?= esc($kader['nomor_kta'] ?? '-') ?></div>
+                <div class="kta-f-nia"><span>NIA  :</span><?= esc($kader['nomor_kta'] ?? '-') ?></div>
                 <div class="kta-f-divider"></div>
                 <table class="kta-f-table">
                     <tr>
