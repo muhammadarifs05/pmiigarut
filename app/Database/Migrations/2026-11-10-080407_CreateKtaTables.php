@@ -54,7 +54,7 @@ class CreateKtaTables extends Migration
                 'constraint' => '30',
                 'null'       => true,
             ],
-            'nik' => [
+            'nim' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '16',
             ],

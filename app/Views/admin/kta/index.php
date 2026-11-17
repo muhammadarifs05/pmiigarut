@@ -83,7 +83,7 @@
                                                     name="keyword"
                                                     class="form-control"
                                                     value="<?= esc($keywordFilterValue); ?>"
-                                                    placeholder="Cari nama pemohon, NIK, nomor KTA, atau komisariat">
+                                                    placeholder="Cari nama pemohon, NIM, nomor KTA, atau komisariat">
                                             </div>
                                         </div>
 
@@ -122,7 +122,7 @@
                                                         <td><?= $no++; ?></td>
                                                         <td>
                                                             <strong><?= esc($item['nama_lengkap']); ?></strong><br>
-                                                            <small class="text-muted"><?= esc($item['nik']); ?></small>
+                                                            <small class="text-muted"><?= esc($item['nim']); ?></small>
                                                         </td>
                                                         <td><?= esc($item['nama_komisariat'] ?? '-'); ?></td>
                                                         <td><?= esc($item['created_at'] ?? '-'); ?></td>

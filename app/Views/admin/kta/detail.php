@@ -68,12 +68,29 @@ if (($pengajuanData['jenis_kelamin'] ?? '') === 'L') {
                                     <div class="col-md-6">
                                         <table class="table table-bordered">
                                             <tr>
-                                                <th width="190">NIK</th>
-                                                <td><?= esc($pengajuanData['nik'] ?? '-'); ?></td>
+                                                <th width="190">NIM / NPM</th>
+                                                <td><?= esc($pengajuanData['nim'] ?? '-'); ?></td>
                                             </tr>
                                             <tr>
                                                 <th>Nama Lengkap</th>
                                                 <td><strong><?= esc($pengajuanData['nama_lengkap'] ?? '-'); ?></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td><?= esc($pengajuanData['email'] ?? '-'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>No. HP / WhatsApp</th>
+                                                <td>
+                                                    <?php if (! empty($pengajuanData['no_hp'])) : ?>
+                                                        <?= esc($pengajuanData['no_hp']); ?>
+                                                        <a href="https://wa.me/<?= preg_replace('/^0/', '62', preg_replace('/\D/', '', $pengajuanData['no_hp'])); ?>" target="_blank" class="badge bg-success ms-2 text-decoration-none">
+                                                            <i class="bx bxl-whatsapp"></i> Hubungi WA
+                                                        </a>
+                                                    <?php else : ?>
+                                                        -
+                                                    <?php endif; ?>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <th>Tempat, Tanggal Lahir</th>

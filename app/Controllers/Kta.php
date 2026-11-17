@@ -47,12 +47,29 @@ class Kta extends BaseController
     {
         // Validasi Input Form
         $rules = [
-            'nik' => [
-                'rules'  => 'required|numeric|exact_length[16]',
+            'nim' => [
+                'rules'  => 'required|alpha_numeric_punct|min_length[4]|max_length[30]',
                 'errors' => [
-                    'required'     => 'NIK wajib diisi.',
-                    'numeric'      => 'NIK harus berupa angka.',
-                    'exact_length' => 'NIK harus berjumlah tepat 16 digit.',
+                    'required'            => 'NIM / NPM wajib diisi.',
+                    'alpha_numeric_punct' => 'Format NIM / NPM tidak valid.',
+                    'min_length'          => 'NIM / NPM minimal 4 karakter.',
+                    'max_length'          => 'NIM / NPM maksimal 30 karakter.',
+                ],
+            ],
+            'email' => [
+                'rules'  => 'required|valid_email|max_length[150]',
+                'errors' => [
+                    'required'    => 'Alamat email wajib diisi.',
+                    'valid_email' => 'Format alamat email tidak valid.',
+                    'max_length'  => 'Alamat email maksimal 150 karakter.',
+                ],
+            ],
+            'no_hp' => [
+                'rules'  => 'required|min_length[9]|max_length[20]',
+                'errors' => [
+                    'required'   => 'Nomor HP / WhatsApp wajib diisi.',
+                    'min_length' => 'Nomor HP / WhatsApp minimal 9 digit.',
+                    'max_length' => 'Nomor HP / WhatsApp maksimal 20 digit.',
                 ],
             ],
             'nama_lengkap' => [
@@ -107,15 +124,45 @@ class Kta extends BaseController
             ],
         ];
 
-        $nik = trim((string) $this->request->getPost('nik'));
+        $nim          = trim((string) $this->request->getPost('nim'));
+        $email        = strtolower(trim((string) $this->request->getPost('email')));
+        $noHp         = preg_replace('/\D/', '', (string) $this->request->getPost('no_hp'));
+        $komisariatId = (int) $this->request->getPost('komisariat_id');
+
+        // 1. Cek duplikat NIM pada komisariat yang sama
         $existingKta = $this->ktaRequestModel
-            ->where('nik', $nik)
+            ->where('nim', $nim)
+            ->where('komisariat_id', $komisariatId)
             ->whereIn('status', ['pending', 'approved'])
             ->first();
 
         if ($existingKta) {
             return redirect()->back()->withInput()->with('errors', [
-                'nik' => 'NIK ini sudah terdaftar pada pengajuan aktif atau sudah memiliki KTA. Silakan cek pada menu Cek Status Pengajuan.',
+                'nim' => 'NIM ini sudah terdaftar pada pengajuan aktif atau sudah memiliki KTA di komisariat tersebut. Silakan cek pada menu Cek Status Pengajuan.',
+            ]);
+        }
+
+        // 2. Cek duplikat Email pada pengajuan aktif
+        $existingEmail = $this->ktaRequestModel
+            ->where('email', $email)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
+
+        if ($existingEmail) {
+            return redirect()->back()->withInput()->with('errors', [
+                'email' => 'Alamat email ini sudah digunakan pada pengajuan aktif atau KTA yang sudah terbit.',
+            ]);
+        }
+
+        // 3. Cek duplikat No. HP / WhatsApp pada pengajuan aktif
+        $existingHp = $this->ktaRequestModel
+            ->where('no_hp', $noHp)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
+
+        if ($existingHp) {
+            return redirect()->back()->withInput()->with('errors', [
+                'no_hp' => 'Nomor HP / WhatsApp ini sudah digunakan pada pengajuan aktif atau KTA yang sudah terbit.',
             ]);
         }
 
@@ -139,8 +186,10 @@ class Kta extends BaseController
         // Simpan Data Pengajuan
         $this->ktaRequestModel->save([
             'uuid_token'    => $uuidToken,
-            'nik'           => $this->request->getPost('nik'),
+            'nim'           => $nim,
             'nama_lengkap'  => $this->request->getPost('nama_lengkap'),
+            'email'         => $email,
+            'no_hp'         => $noHp,
             'tempat_lahir'  => $this->request->getPost('tempat_lahir'),
             'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
             'alamat'        => $this->request->getPost('alamat'),
@@ -192,12 +241,16 @@ class Kta extends BaseController
         }
 
         // Data Masking untuk Keamanan Privasi Publik
-        $maskedNik = substr($kader['nik'], 0, 6) . '******' . substr($kader['nik'], -4);
+        $rawNim    = (string) ($kader['nim'] ?? '');
+        $lenNim    = strlen($rawNim);
+        $maskedNim = $lenNim > 6
+            ? substr($rawNim, 0, 3) . str_repeat('*', $lenNim - 6) . substr($rawNim, -3)
+            : $rawNim;
 
         $data = [
             'title'     => 'Verifikasi KTA Sah - PC PMII Garut',
             'kader'     => $kader,
-            'maskedNik' => $maskedNik,
+            'maskedNim' => $maskedNim,
             'site'      => $site,
         ];
 
@@ -218,26 +271,26 @@ class Kta extends BaseController
     }
 
     /**
-     * Proses Pencarian Status KTA menggunakan NIK & Tanggal Lahir
+     * Proses Pencarian Status KTA menggunakan NIM & Tanggal Lahir
      */
     public function hasilStatus()
     {
-        $nik          = trim((string) $this->request->getPost('nik'));
+        $nim          = trim((string) $this->request->getPost('nim'));
         $tanggalLahir = trim((string) $this->request->getPost('tanggal_lahir'));
 
-        if ($nik === '' || $tanggalLahir === '') {
-            return redirect()->back()->withInput()->with('error', 'NIK dan Tanggal Lahir wajib diisi.');
+        if ($nim === '' || $tanggalLahir === '') {
+            return redirect()->back()->withInput()->with('error', 'NIM dan Tanggal Lahir wajib diisi.');
         }
 
-        // Ambil pengajuan terbaru berdasarkan NIK dan Tanggal Lahir
+        // Ambil pengajuan terbaru berdasarkan NIM dan Tanggal Lahir
         $pengajuan = $this->ktaRequestModel
-            ->where('nik', $nik)
+            ->where('nim', $nim)
             ->where('tanggal_lahir', $tanggalLahir)
             ->orderBy('id', 'DESC')
             ->first();
 
         if (! $pengajuan) {
-            return redirect()->back()->withInput()->with('error', 'Data pengajuan tidak ditemukan. Periksa kembali NIK dan Tanggal Lahir Anda.');
+            return redirect()->back()->withInput()->with('error', 'Data pengajuan tidak ditemukan. Periksa kembali NIM dan Tanggal Lahir Anda.');
         }
 
         // Ambil nama komisariat & kampus
@@ -270,7 +323,7 @@ class Kta extends BaseController
             'title'      => 'Hasil Cek Status KTA - PC PMII Garut',
             'site'       => $this->siteModel->find(1),
             'pengajuan'  => $pengajuan,
-            'nik_input'  => $nik,
+            'nim_input'  => $nim,
             'tgl_input'  => $tanggalLahir,
             'qrBase64'   => $qrBase64,
             'fotoBase64' => $fotoBase64,

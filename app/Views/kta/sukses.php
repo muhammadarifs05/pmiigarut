@@ -45,7 +45,7 @@
 
                         <div style="background: #e8f4fd; color: #0c5460; padding: 15px 20px; border-left: 5px solid #106eea; text-align: left; border-radius: 4px; margin-bottom: 30px;">
                             <div class="mb-2"><strong>Status:</strong> <span class="badge bg-warning text-dark" style="font-size: 13px;">Menunggu Verifikasi (Pending)</span></div>
-                            <div><strong>Cara Cek Progres & Unduh KTA:</strong> Gunakan <strong>NIK (<?= esc($kader['nik'] ?? '') ?>)</strong> dan <strong>Tanggal Lahir</strong> Anda pada menu <em>Cek Status Pengajuan</em>.</div>
+                            <div><strong>Cara Cek Progres & Unduh KTA:</strong> Gunakan <strong>NIM (<?= esc($kader['nim'] ?? '') ?>)</strong> dan <strong>Tanggal Lahir</strong> Anda pada menu <em>Cek Status Pengajuan</em>.</div>
                         </div>
 
                         <div>

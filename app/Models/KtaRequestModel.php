@@ -12,10 +12,11 @@ class KtaRequestModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [
+    protected $allowedFields = [
         'uuid_token',
-        'nomor_kta',
-        'nik',
+        'nim',
+        'email',
+        'no_hp',
         'nama_lengkap',
         'tempat_lahir',
         'tanggal_lahir',
@@ -27,6 +28,7 @@ class KtaRequestModel extends Model
         'pas_foto',
         'berkas_bukti',
         'status',
+        'nomor_kta',
         'catatan_admin',
         'approved_at',
     ];
@@ -49,7 +51,7 @@ class KtaRequestModel extends Model
         if (! empty($keyword)) {
             $builder->groupStart()
                 ->like('kta_requests.nama_lengkap', $keyword)
-                ->orLike('kta_requests.nik', $keyword)
+                ->orLike('kta_requests.nim', $keyword)
                 ->orLike('kta_requests.nomor_kta', $keyword)
                 ->orLike('komisariat.nama_komisariat', $keyword)
                 ->groupEnd();

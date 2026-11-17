@@ -505,7 +505,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             <div class="section-title">
                 <span class="about-badge">Lacak Pengajuan</span>
                 <h3>Cek Status & Unduh <span>KTA Digital</span></h3>
-                <p>Masukkan <strong>NIK</strong> dan <strong>Tanggal Lahir</strong> Anda untuk memantau progres verifikasi atau mengunduh KTA Digital.</p>
+                <p>Masukkan <strong>NIM</strong> dan <strong>Tanggal Lahir</strong> Anda untuk memantau progres verifikasi atau mengunduh KTA Digital.</p>
             </div>
 
             <div class="row justify-content-center">
@@ -519,13 +519,13 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
                             </div>
                         <?php endif ?>
 
-                        <!-- Form Pencarian Mudah (NIK + Tanggal Lahir) -->
+                        <!-- Form Pencarian Mudah (NIM + Tanggal Lahir) -->
                         <form action="<?= base_url('kta/cek-status') ?>" method="post">
                             <?= csrf_field() ?>
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-5">
-                                    <label for="nik" class="form-label fw-bold">NIK (16 Digit)</label>
-                                    <input type="text" name="nik" id="nik" class="form-control" maxlength="16" placeholder="Contoh: 3205xxxxxxxxxxxx" value="<?= esc($nik_input ?? old('nik')) ?>" required>
+                                    <label for="nim" class="form-label fw-bold">NIM / NPM</label>
+                                    <input type="text" name="nim" id="nim" class="form-control" maxlength="30" placeholder="Masukkan NIM/NPM Anda" value="<?= esc($nim_input ?? old('nim')) ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tanggal_lahir" class="form-label fw-bold">Tanggal Lahir</label>

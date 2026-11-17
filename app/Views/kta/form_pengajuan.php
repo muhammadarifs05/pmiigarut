@@ -28,7 +28,7 @@
                         <span style="background: #eef4ff; color: #106eea; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-bottom: 15px;">PENGAJUAN BARU</span>
                         <h4 style="font-weight: bold; color: #37517e; margin-bottom: 15px;">Formulir Pengajuan KTA</h4>
                         <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
-                            Pastikan seluruh data diri (NIK, Nama, dan Pasfoto) disiapkan dengan valid agar proses verifikasi berjalan cepat dan akurat.
+                            Pastikan seluruh data diri (NIM, Nama, dan Pasfoto) disiapkan dengan valid agar proses verifikasi berjalan cepat dan akurat.
                         </p>
                         <ul style="list-style: none; padding: 0; font-size: 13px; color: #555; margin-bottom: 0;">
                             <li class="mb-2"><i class="bx bx-check text-success me-2"></i> Wajib melampirkan Pasfoto Formal</li>
@@ -44,7 +44,7 @@
                         <span style="background: #eef4ff; color: #106eea; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-bottom: 15px;">SUDAH PERNAH MENGAJUKAN?</span>
                         <h4 style="font-weight: bold; color: #37517e; margin-bottom: 15px">Cek Status Pengajuan</h4>
                         <p style="color: #666; font-size: 14px; margin-bottom: 25px;">
-                            Gunakan <strong>NIK dan Tanggal Lahir</strong> Anda untuk memantau status verifikasi serta mengunduh KTA Digital dalam format PDF maupun JPG.
+                            Gunakan <strong>NIM dan Tanggal Lahir</strong> Anda untuk memantau status verifikasi serta mengunduh KTA Digital dalam format PDF maupun JPG.
                         </p>
                         <div class="mt-4">
                             <a href="<?= base_url('kta/cek-status') ?>" class="btn btn-success px-4 py-2" style="background: #205ec9; border-color: #205ec9; font-weight: 600; border-radius: 4px;">
@@ -81,12 +81,24 @@
 
                                 <div class="row">
                                     <div class="form-group col-md-6 mb-3">
-                                        <label for="nik" class="form-label fw-bold">NIK (Nomor Induk Kependudukan)</label>
-                                        <input type="text" name="nik" class="form-control" id="nik" maxlength="16" value="<?= old('nik') ?>" required placeholder="3205xxxxxxxxxxxx">
+                                        <label for="nim" class="form-label fw-bold">NIM / NPM <span class="text-danger">*</span></label>
+                                        <input type="text" name="nim" class="form-control" id="nim" maxlength="30" placeholder="Masukkan NIM/NPM Anda" value="<?= esc(old('nim')) ?>" required>
                                     </div>
                                     <div class="form-group col-md-6 mb-3">
-                                        <label for="nama_lengkap" class="form-label fw-bold">Nama Lengkap (Sesuai KTP)</label>
-                                        <input type="text" name="nama_lengkap" class="form-control" id="nama_lengkap" value="<?= old('nama_lengkap') ?>" required>
+                                        <label for="nama_lengkap" class="form-label fw-bold">Nama Lengkap (Sesuai KTP) <span class="text-danger">*</span></label>
+                                        <input type="text" name="nama_lengkap" class="form-control" id="nama_lengkap" value="<?= esc(old('nama_lengkap')) ?>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="email" class="form-label fw-bold">Email Aktif <span class="text-danger">*</span></label>
+                                        <input type="email" name="email" class="form-control" id="email" placeholder="nama@email.com" value="<?= esc(old('email')) ?>" required>
+                                        <small class="text-muted">Notifikasi KTA terbit akan dikirim ke alamat email ini.</small>
+                                    </div>
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="no_hp" class="form-label fw-bold">No. HP / WhatsApp <span class="text-danger">*</span></label>
+                                        <input type="text" name="no_hp" class="form-control" id="no_hp" maxlength="20" placeholder="08xxxxxxxxxx" value="<?= esc(old('no_hp')) ?>" required>
                                     </div>
                                 </div>
 
