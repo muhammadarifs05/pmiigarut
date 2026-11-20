@@ -127,38 +127,47 @@ class KtaAdmin extends BaseController
 
             $cekStatusUrl = base_url('kta/cek-status');
             $verifyUrl    = base_url('verify/' . $kader['uuid_token']);
+            $tahun        = date('Y');
 
             $message = "
-                <div style='font-family: Arial, sans-serif; color: #1e293b; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;'>
-                    <div style='background: #0c44a6; color: #ffffff; padding: 20px; text-align: center;'>
-                        <h2 style='margin: 0; font-size: 18px;'>PC PMII KABUPATEN GARUT</h2>
-                        <p style='margin: 4px 0 0 0; font-size: 12px; color: #f3c430;'>Sistem Informasi Keanggotaan & KTA Digital</p>
+                <div style='background-color: #f8fafc; padding: 24px 12px; font-family: Arial, Helvetica, sans-serif;'>
+                    <div style='background-color: #ffffff; color: #1e293b; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;'>
+                        <div style='background: #0c44a6; color: #ffffff; padding: 20px; text-align: center;'>
+                            <h2 style='margin: 0; font-size: 18px;'>PC PMII KABUPATEN GARUT</h2>
+                            <p style='margin: 4px 0 0 0; font-size: 12px; color: #f3c430;'>Sistem Informasi Keanggotaan &amp; KTA Digital</p>
+                        </div>
+                        <div style='padding: 24px;'>
+                            <p style='margin-top: 0;'>Assalamu'alaikum Warahmatullahi Wabarakatuh,</p>
+                            <p>Sahabat/i <strong>" . esc($kader['nama_lengkap']) . "</strong>,</p>
+                            <p>Selamat! Pengajuan Kartu Tanda Anggota (KTA) Digital Anda telah <strong>diverifikasi dan disetujui</strong> oleh Pengurus Cabang PMII Kabupaten Garut.</p>
+                            <table style='width: 100%; background: #f8fafc; border-collapse: collapse; margin: 16px 0;'>
+                                <tr>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0; width: 35%;'><strong>Nomor Induk Anggota (NIA)</strong></td>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0; color: #0c44a6; font-weight: bold;'>" . esc($kader['nomor_kta']) . "</td>
+                                </tr>
+                                <tr>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'><strong>NIM</strong></td>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'>" . esc($kader['nim']) . "</td>
+                                </tr>
+                                <tr>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'><strong>Komisariat</strong></td>
+                                    <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'>" . esc($kader['nama_komisariat'] ?? '-') . "</td>
+                                </tr>
+                            </table>
+                            <p>Anda dapat mengunduh file KTA Digital (format <strong>PDF</strong> maupun <strong>JPG</strong>) melalui halaman Cek Status menggunakan <strong>NIM</strong> dan <strong>Tanggal Lahir</strong> Anda:</p>
+                            <p style='text-align: center; margin: 24px 0;'>
+                                <a href='{$cekStatusUrl}' style='background: #106eea; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;'>Unduh KTA Digital Sekarang</a>
+                            </p>
+                            <p style='font-size: 12px; color: #64748b;'>Tautan verifikasi keabsahan KTA: <a href='{$verifyUrl}' style='color: #106eea;'>{$verifyUrl}</a></p>
+                            <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;'>
+                            <p style='margin: 0; font-size: 13px;'>Wallahul Muwaffiq Ila Aqwamith Tharieq,<br>Wassalamu'alaikum Warahmatullahi Wabarakatuh.
+                            <br>
+                            <br><strong>Salam Pergerakan,</strong></p>
+                            <strong>PC PMII Kabupaten Garut</strong></p>
+                        </div>
                     </div>
-                    <div style='padding: 24px;'>
-                        <p>Assalamu'alaikum Warahmatullahi Wabarakatuh,</p>
-                        <p>Sahabat/i <strong>" . esc($kader['nama_lengkap']) . "</strong>,</p>
-                        <p>Selamat! Pengajuan Kartu Tanda Anggota (KTA) Digital Anda telah <strong>diverifikasi dan disetujui</strong> oleh Pengurus Cabang PMII Kabupaten Garut.</p>
-                        <table style='width: 100%; background: #f8fafc; border-collapse: collapse; margin: 16px 0;'>
-                            <tr>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0; width: 35%;'><strong>Nomor Induk Anggota (NIA)</strong></td>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0; color: #0c44a6; font-weight: bold;'>" . esc($kader['nomor_kta']) . "</td>
-                            </tr>
-                            <tr>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'><strong>NIM</strong></td>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'>" . esc($kader['nim']) . "</td>
-                            </tr>
-                            <tr>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'><strong>Komisariat</strong></td>
-                                <td style='padding: 8px 12px; border: 1px solid #e2e8f0;'>" . esc($kader['nama_komisariat'] ?? '-') . "</td>
-                            </tr>
-                        </table>
-                        <p>Anda dapat mengunduh file KTA Digital (format <strong>PDF</strong> maupun <strong>JPG</strong>) melalui halaman Cek Status menggunakan <strong>NIM</strong> dan <strong>Tanggal Lahir</strong> Anda:</p>
-                        <p style='text-align: center; margin: 24px 0;'>
-                            <a href='{$cekStatusUrl}' style='background: #106eea; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;'>Unduh KTA Digital Sekarang</a>
-                        </p>
-                        <p style='font-size: 12px; color: #64748b;'>Tautan verifikasi keabsahan KTA: <a href='{$verifyUrl}'>{$verifyUrl}</a></p>
-                        <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;'>
-                        <p style='margin: 0; font-size: 13px;'>Wallahul Muwaffiq Ila Aqwamith Tharieq,<br>Wassalamu'alaikum Warahmatullahi Wabarakatuh.<br><strong>PC PMII Kabupaten Garut</strong></p>
+                    <div style='max-width: 600px; margin: 16px auto 0 auto; text-align: center; font-size: 12px; color: #94a3b8;'>
+                        &copy; {$tahun} PC PMII Garut. All rights reserved.
                     </div>
                 </div>
             ";

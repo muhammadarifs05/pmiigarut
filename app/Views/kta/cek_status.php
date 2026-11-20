@@ -1,11 +1,7 @@
+<?= $this->extend('layout/template-home'); ?>
+<?= $this->section('content'); ?>
+
 <?php
-
-/**
- * @var string $title
- * @var array $site
- * @var array $pengajuan
- */
-
 $toBase64 = static function (array $paths): string {
     foreach ($paths as $path) {
         if (is_file($path)) {
@@ -41,7 +37,6 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         $target = 0.75;  // Rasio standar 3:4
 
         if (abs($ratio - $target) < 0.02) {
-            // Jika sudah rasio 3:4, isi penuh bingkai secara presisi
             $fotoImgStyle = 'width: 100%; height: 100%; max-width: none !important; display: block;';
         } elseif ($ratio > $target) {
             $newW = $boxH * $ratio;
@@ -55,19 +50,36 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
     }
 }
 
+$pengajuanData = $pengajuan ?? null;
+$nimInputValue = $nim_input ?? '';
+$tglInputValue = $tgl_input ?? '';
 ?>
-<?= $this->extend('layout/template-home'); ?>
-<?= $this->section('content'); ?>
 
 <style>
     .kta-preview-wrapper {
         display: flex;
         flex-wrap: wrap;
-        gap: 24px;
+        gap: 16px;
         justify-content: center;
-        padding: 24px;
-        background: #f1f5f9;
-        border-radius: 10px;
+        align-items: center;
+        padding: 16px;
+        background: #f2f3ff;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .kta-preview-wrapper {
+            gap: 24px;
+            padding: 24px;
+        }
+    }
+
+    .kta-card-scaler {
+        width: 380px;
+        height: 240px;
+        position: relative;
+        flex-shrink: 0;
     }
 
     .kta-card-box {
@@ -78,17 +90,18 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         position: relative;
         box-shadow: 0 8px 22px rgba(11, 44, 107, 0.16);
         background: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: left;
+        font-family: Arial, Helvetica, sans-serif !important;
+        text-align: left !important;
         flex-shrink: 0;
         box-sizing: border-box;
+        line-height: normal !important;
+        transform-origin: top left;
     }
 
     .kta-card-box * {
         box-sizing: border-box;
     }
 
-    /* ================= KARTU DEPAN ================= */
     /* ================= KARTU DEPAN ================= */
     .kta-f-header {
         position: absolute;
@@ -129,14 +142,14 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         position: absolute;
         top: 10px;
         left: 0;
-        font-family: Georgia, 'Times New Roman', serif;
+        font-family: Georgia, 'Times New Roman', serif !important;
         font-style: italic;
         font-weight: 700;
         font-size: 12.5px;
         color: #f3c430;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .kta-f-title {
@@ -147,9 +160,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         font-weight: 800;
         letter-spacing: 1.4px;
         color: #ffffff;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .kta-f-sub {
@@ -160,9 +173,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         font-weight: 700;
         letter-spacing: 0.65px;
         color: #ffffff;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .kta-f-cabang {
@@ -173,9 +186,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         font-weight: 700;
         letter-spacing: 2px;
         color: #f3c430;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .kta-f-cabang-line {
@@ -192,7 +205,6 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         vertical-align: middle;
     }
 
-    /* Foto & Blok Biodata dibuat sejajar presisi (top: 86px, tinggi: 108px) */
     .kta-f-foto {
         position: absolute;
         top: 86px;
@@ -216,26 +228,29 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
 
     .kta-f-bio {
         position: absolute;
-        top: 85px;
+        top: 84px;
         left: 112px;
         right: 16px;
     }
 
     .kta-f-nama {
-        font-family: Georgia, 'Times New Roman', serif;
+        font-family: Georgia, 'Times New Roman', serif !important;
         font-size: 15.5px;
         font-weight: 700;
         color: #0b2c6b;
-        line-height: 1.1;
+        line-height: 1.15 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .kta-f-nia {
         font-size: 9.8px;
         font-weight: 700;
         color: #1565c0;
-        margin-top: 2px;
+        margin: 2px 0 0 0 !important;
+        padding: 0 !important;
         letter-spacing: 0.5px;
-        line-height: 1.15;
+        line-height: 1.15 !important;
     }
 
     .kta-f-nia span {
@@ -246,36 +261,52 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
     .kta-f-divider {
         height: 1px;
         background: #d4af37;
-        margin: 5px 0;
+        margin: 5px 0 !important;
+        padding: 0 !important;
     }
 
-    .kta-f-table {
-        width: 100%;
-        font-size: 8.4px;
-        border-collapse: collapse;
+    .kta-f-table,
+    .kta-f-table tbody,
+    .kta-f-table tr {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-collapse: collapse !important;
+        background: transparent !important;
     }
 
     .kta-f-table td {
-        padding: 1.8px 0;
-        vertical-align: top;
+        padding: 1.6px 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        vertical-align: baseline !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        line-height: 1.25 !important;
     }
 
     .kta-f-lbl {
-        width: 68px;
-        font-size: 7.1px;
-        font-weight: 700;
-        color: #6c7a9c;
-        letter-spacing: 0.5px;
+        width: 62px !important;
+        padding-right: 6px !important;
+        font-size: 7.4px !important;
+        font-weight: 700 !important;
+        color: #6c7a9c !important;
+        letter-spacing: 0.4px !important;
+        text-transform: uppercase !important;
     }
 
     .kta-f-val {
-        color: #1e293b;
-        line-height: 1.2;
+        font-size: 8.3px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        line-height: 1.25 !important;
     }
 
     .kta-f-val-bold {
-        font-weight: 700;
-        color: #0b2c6b;
+        font-size: 8.3px !important;
+        font-weight: 700 !important;
+        color: #0b2c6b !important;
     }
 
     .kta-f-footer {
@@ -296,19 +327,19 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         color: #ffffff;
         font-weight: 600;
         letter-spacing: 0.2px;
-        line-height: 1;
+        line-height: 1 !important;
     }
 
     .kta-f-footer-r {
         position: absolute;
         top: 5px;
         right: 18px;
-        font-family: Georgia, 'Times New Roman', serif;
+        font-family: Georgia, 'Times New Roman', serif !important;
         font-style: italic;
         font-weight: 700;
         font-size: 8px;
         color: #f3c430;
-        line-height: 1;
+        line-height: 1 !important;
     }
 
     /* ================= KARTU BELAKANG ================= */
@@ -345,7 +376,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 1.2px;
-        line-height: 1;
+        line-height: 1 !important;
     }
 
     .kta-b-tujuan-box {
@@ -353,29 +384,29 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         top: 37px;
         left: 18px;
         right: 18px;
-        text-align: center;
+        text-align: center !important;
     }
 
     .kta-b-title {
-        font-family: Georgia, 'Times New Roman', serif;
+        font-family: Georgia, 'Times New Roman', serif !important;
         font-style: italic;
         font-weight: 700;
         font-size: 14px;
         color: #0b2c6b;
-        line-height: 1.1;
+        line-height: 1.1 !important;
     }
 
     .kta-b-line {
         width: 34px;
         height: 1.5px;
         background: #f3c430;
-        margin: 3px auto 5px auto;
+        margin: 3px auto 5px auto !important;
     }
 
     .kta-b-tujuan {
         font-size: 7.7px;
         color: #334155;
-        line-height: 1.36;
+        line-height: 1.36 !important;
     }
 
     .kta-b-tujuan strong {
@@ -389,34 +420,49 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         right: 24px;
     }
 
-    .kta-b-ttd-table {
-        width: 100%;
-        border-collapse: collapse;
+    .kta-b-ttd-table,
+    .kta-b-ttd-table tbody,
+    .kta-b-ttd-table tr {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-collapse: collapse !important;
+        background: transparent !important;
     }
 
     .kta-b-ttd-table td {
-        width: 33.33%;
-        text-align: center;
-        vertical-align: bottom;
+        width: 33.33% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        text-align: center !important;
+        vertical-align: bottom !important;
     }
 
     .kta-b-sign-space {
         height: 30px;
         margin-bottom: -4px;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .kta-b-sign-space img {
         height: 30px;
         width: auto;
+        margin: 0 auto !important;
+        display: block !important;
     }
 
     .kta-b-sign-name {
-        font-family: Georgia, 'Times New Roman', serif;
+        font-family: Georgia, 'Times New Roman', serif !important;
         font-size: 9px;
         font-weight: 700;
         color: #0b2c6b;
         text-decoration: underline;
+        line-height: 1.2 !important;
     }
 
     .kta-b-sign-role {
@@ -425,12 +471,14 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         color: #64748b;
         letter-spacing: 1.1px;
         margin-top: 1px;
+        line-height: 1.1 !important;
     }
 
     .kta-b-stamp-img {
         height: 38px;
         width: auto;
-        vertical-align: middle;
+        margin: 0 auto !important;
+        display: block !important;
     }
 
     .kta-b-ketentuan {
@@ -438,7 +486,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         bottom: 15px;
         left: 16px;
         width: 280px;
-        text-align: left;
+        text-align: left !important;
     }
 
     .kta-b-ketentuan-title {
@@ -447,30 +495,37 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         color: #c59b27;
         letter-spacing: 0.8px;
         margin-bottom: 1.5px;
+        line-height: 1.1 !important;
     }
 
     .kta-b-ketentuan-list {
         font-size: 6.3px;
         color: #334155;
-        line-height: 1.34;
+        line-height: 1.34 !important;
     }
 
     .kta-b-qr {
         position: absolute;
         bottom: 15px;
         right: 16px;
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         border: 1.5px solid #0c44a6;
         border-radius: 6px;
-        padding: 2px;
+        padding: 3px;
         background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 
     .kta-b-qr img {
-        width: 35px;
-        height: 35px;
-        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        display: block !important;
+        image-rendering: pixelated;
     }
 
     .kta-b-footer {
@@ -483,323 +538,438 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
     }
 </style>
 
-<main id="main">
+<main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <div class="flex flex-col w-full">
 
-    <!-- Header / Breadcrumbs -->
-    <section class="breadcrumbs" style="margin-top: 80px; background-color: #f1f6fe; padding: 20px 0;">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2>Cek Status & Unduh KTA</h2>
-                <ol>
-                    <li><a href="/">Home</a></li>
-                    <li>Cek Status KTA</li>
-                </ol>
+        <!-- Breadcrumb & Sub-Header Strip -->
+        <!-- <section class="w-full bg-surface-container-low border-b border-outline-variant/30">
+            <div class="max-w-7xl mx-auto px-gutter py-space-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-xs">
+                <nav aria-label="Breadcrumb" class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                    <span class="text-primary font-label-sm">Cek Status KTA</span>
+                </nav>
             </div>
-        </div>
-    </section>
+        </section> -->
 
-    <!-- Content Section -->
-    <section class="contact">
-        <div class="container">
-
-            <div class="section-title">
-                <span class="about-badge">Lacak Pengajuan</span>
-                <h3>Cek Status & Unduh <span>KTA Digital</span></h3>
-                <p>Masukkan <strong>NIM</strong> dan <strong>Tanggal Lahir</strong> Anda untuk memantau progres verifikasi atau mengunduh KTA Digital.</p>
+        <!-- Hero Header Block -->
+        <section class="w-full pt-space-xl pb-space-lg" data-aos="fade-up">
+            <div class="max-w-4xl mx-auto px-gutter text-center flex flex-col items-center">
+                <span class="inline-flex items-center font-label-xs text-label-xs tracking-wider uppercase bg-primary-fixed text-primary px-space-md py-1 rounded-full mb-space-sm font-bold">
+                    LACAK PENGAJUAN
+                </span>
+                <h2 class="font-headline-xl text-3xl sm:text-4xl lg:text-headline-xl text-on-surface font-extrabold tracking-tight leading-tight m-0">
+                    Cek Status &amp; Unduh <span class="relative inline-block text-primary">KTA Digital<span class="absolute left-0 -bottom-1.5 w-full h-1 bg-secondary-container rounded-full"></span></span>
+                </h2>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-space-md mb-0">
+                    Masukkan <strong class="text-on-surface">NIM</strong> dan <strong class="text-on-surface">Tanggal Lahir</strong> Anda untuk memantau progres verifikasi atau mengunduh KTA Digital resmi PC PMII Kab. Garut.
+                </p>
             </div>
+        </section>
 
-            <div class="row justify-content-center">
-                <div class="col-lg-9">
+        <!-- Main Verification Card Component -->
+        <section class="w-full pb-space-xl" data-aos="fade-up" data-aos-delay="60">
+            <div class="max-w-5xl mx-auto px-gutter">
+                <div class="relative bg-surface-container-lowest rounded-2xl shadow-md p-space-md md:p-space-lg border border-outline-variant/30 overflow-hidden">
+                    <!-- Top institutional decorative bar -->
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
 
-                    <div style="width: 100%; background: #fff; padding: 35px 30px; box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.12); border-top: 3px solid #106eea; border-bottom: 3px solid #106eea;">
+                    <!-- Error Alert -->
+                    <?php if (session()->getFlashdata('error')) : ?>
+                        <div class="mt-space-xs mb-space-md p-space-md rounded-xl bg-error-container text-on-error-container font-body-sm text-body-sm flex items-center gap-space-sm">
+                            <span class="material-symbols-outlined text-error text-[20px] shrink-0">error</span>
+                            <span><?= esc(session()->getFlashdata('error')); ?></span>
+                        </div>
+                    <?php endif; ?>
 
-                        <?php if (session()->getFlashdata('error')) : ?>
-                            <div class="alert alert-danger">
-                                <i class="bx bx-error-circle"></i> <?= session()->getFlashdata('error') ?>
-                            </div>
-                        <?php endif ?>
+                    <!-- Search / Verification Form -->
+                    <form id="cekStatusKtaForm" action="<?= base_url('kta/cek-status'); ?>" method="post" autocomplete="off" class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-end pt-space-xs">
+                        <?= csrf_field(); ?>
 
-                        <!-- Form Pencarian Mudah (NIM + Tanggal Lahir) -->
-                        <form action="<?= base_url('kta/cek-status') ?>" method="post">
-                            <?= csrf_field() ?>
-                            <div class="row g-3 align-items-end">
-                                <div class="col-md-5">
-                                    <label for="nim" class="form-label fw-bold">NIM / NPM</label>
-                                    <input type="text" name="nim" id="nim" class="form-control" maxlength="30" placeholder="Masukkan NIM/NPM Anda" value="<?= esc($nim_input ?? old('nim')) ?>" required>
+                        <div class="md:col-span-5 flex flex-col gap-1.5">
+                            <label for="nim" class="font-label-sm text-label-sm text-on-surface-variant font-semibold">NIM / NPM</label>
+                            <input type="text"
+                                id="nim"
+                                name="nim"
+                                maxlength="30"
+                                autocomplete="off"
+                                value="<?= esc($nimInputValue); ?>"
+                                placeholder="Masukkan NIM/NPM Anda"
+                                required
+                                class="w-full h-11 px-space-md rounded-lg bg-surface-container-low text-on-surface font-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container border border-outline-variant/30 transition-all" />
+                        </div>
+
+                        <div class="md:col-span-4 flex flex-col gap-1.5">
+                            <label for="tanggal_lahir" class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Tanggal Lahir</label>
+                            <input type="date"
+                                id="tanggal_lahir"
+                                name="tanggal_lahir"
+                                autocomplete="off"
+                                value="<?= esc($tglInputValue); ?>"
+                                required
+                                class="w-full h-11 px-space-md rounded-lg bg-surface-container-low text-on-surface font-body-md focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container border border-outline-variant/30 transition-all" />
+                        </div>
+
+                        <div class="md:col-span-3">
+                            <button type="submit"
+                                class="w-full h-11 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-semibold inline-flex items-center justify-center gap-space-xs shadow-sm hover:shadow transition-all border-0 cursor-pointer active:scale-95">
+                                <span class="material-symbols-outlined text-[18px]">search</span>
+                                <span>Cek Status</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Hasil Pencarian -->
+                    <?php if ($pengajuanData) : ?>
+                        <div id="hasil-pencarian-kta" class="mt-space-lg pt-space-lg border-t border-outline-variant/30">
+
+                            <!-- Information Pengajuan Table Section -->
+                            <div class="mb-space-lg">
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-space-sm">
+                                    <h3 class="font-title-sm text-title-sm text-on-surface font-bold m-0">Informasi Pengajuan KTA</h3>
+                                    <span class="font-label-xs text-label-xs text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">Sistem Validasi Kader</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="tanggal_lahir" class="form-label fw-bold">Tanggal Lahir</label>
-                                    <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" value="<?= esc($tgl_input ?? old('tanggal_lahir')) ?>" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-primary w-100" type="submit" style="background: #106eea; border-color: #106eea; height: 38px;">
-                                        <i class="bx bx-search"></i> Cek Status
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
 
-                        <!-- Hasil Pencarian -->
-                        <?php if (isset($pengajuan)) : ?>
-                            <hr class="my-4">
-                            <h5 class="mb-3" style="color: #37517e; font-weight: bold;">Informasi Pengajuan KTA</h5>
-
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <th width="30%" class="bg-light">Nama Pemohon</th>
-                                        <td><strong><?= esc($pengajuan['nama_lengkap']) ?></strong></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="bg-light">Komisariat</th>
-                                        <td><?= esc($pengajuan['kampus_fakultas'] ?? '-') ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="bg-light">Tanggal Pengajuan</th>
-                                        <td><?= date('d M Y H:i', strtotime($pengajuan['created_at'])) ?> WIB</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="bg-light align-middle">Status Saat Ini</th>
-                                        <td>
-                                            <?php if ($pengajuan['status'] === 'pending') : ?>
-                                                <span class="badge bg-warning text-dark py-2 px-3"><i class="bx bx-time-five"></i> Menunggu Verifikasi Admin</span>
-                                            <?php elseif ($pengajuan['status'] === 'approved') : ?>
-                                                <span class="badge bg-success py-2 px-3"><i class="bx bx-check-circle"></i> Diterima & Terverifikasi</span>
-                                                <div class="mt-2 text-success">Nomor Anggota (NIA): <strong><?= esc($pengajuan['nomor_kta']) ?></strong></div>
-                                            <?php elseif ($pengajuan['status'] === 'rejected') : ?>
-                                                <span class="badge bg-danger py-2 px-3"><i class="bx bx-x-circle"></i> Pengajuan Ditolak</span>
-                                                <?php if (! empty($pengajuan['catatan_admin'])): ?>
-                                                    <div class="alert alert-warning mt-2 mb-0 small">
-                                                        <strong>Catatan Admin:</strong> <?= esc($pengajuan['catatan_admin']) ?>
+                                <div class="rounded-xl overflow-hidden border border-outline-variant/30 bg-surface-container-low">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 px-space-md py-3.5 gap-1 md:gap-2 items-center">
+                                        <span class="md:col-span-4 font-label-md text-[13px] md:text-label-md text-on-surface-variant font-medium">Nama Pemohon</span>
+                                        <span class="md:col-span-8 font-title-sm text-title-sm text-on-surface font-semibold"><?= esc($pengajuanData['nama_lengkap']); ?></span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-12 px-space-md py-3.5 gap-1 md:gap-2 items-center bg-surface-container-lowest">
+                                        <span class="md:col-span-4 font-label-md text-[13px] md:text-label-md text-on-surface-variant font-medium">Komisariat</span>
+                                        <span class="md:col-span-8 font-body-md text-body-md text-on-surface"><?= esc($pengajuanData['kampus_fakultas'] ?: ($pengajuanData['nama_komisariat'] ?? '-')); ?></span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-12 px-space-md py-3.5 gap-1 md:gap-2 items-center">
+                                        <span class="md:col-span-4 font-label-md text-[13px] md:text-label-md text-on-surface-variant font-medium">Tanggal Pengajuan</span>
+                                        <span class="md:col-span-8 font-body-md text-body-md text-on-surface"><?= date('d M Y H:i', strtotime($pengajuanData['created_at'])); ?> WIB</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-12 px-space-md py-3.5 gap-1.5 md:gap-2 bg-surface-container-lowest items-start">
+                                        <span class="md:col-span-4 font-label-md text-[13px] md:text-label-md text-on-surface-variant font-medium md:pt-1">Status Saat Ini</span>
+                                        <div class="md:col-span-8 flex flex-col gap-1.5 items-start">
+                                            <?php if ($pengajuanData['status'] === 'pending') : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-amber-400 text-slate-900 px-3 py-1 rounded text-[12px] font-semibold">
+                                                    <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                                    <span>Menunggu Verifikasi Admin</span>
+                                                </span>
+                                            <?php elseif ($pengajuanData['status'] === 'approved') : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-[#007038] text-white px-3 py-1 rounded text-[12px] font-semibold tracking-wide">
+                                                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                                    <span>Diterima &amp; Terverifikasi</span>
+                                                </span>
+                                                <span class="font-label-sm text-label-sm font-bold text-primary">
+                                                    Nomor Anggota (NIA): <?= esc($pengajuanData['nomor_kta']); ?>
+                                                </span>
+                                            <?php elseif ($pengajuanData['status'] === 'rejected') : ?>
+                                                <span class="inline-flex items-center gap-1.5 bg-error text-on-error px-3 py-1 rounded text-[12px] font-semibold">
+                                                    <span class="material-symbols-outlined text-[16px]">cancel</span>
+                                                    <span>Pengajuan Ditolak</span>
+                                                </span>
+                                                <?php if (! empty($pengajuanData['catatan_admin'])) : ?>
+                                                    <div class="mt-1 p-3 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-body-sm text-body-sm w-full">
+                                                        <strong>Catatan Admin:</strong> <?= esc($pengajuanData['catatan_admin']); ?>
                                                     </div>
                                                 <?php endif; ?>
                                             <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Jika Diterima: Tampilkan Pratinjau Kartu + Tombol Unduh PDF & JPG -->
-                            <?php if ($pengajuan['status'] === 'approved') : ?>
+                            <?php if ($pengajuanData['status'] === 'approved') : ?>
                                 <?php
-                                $kampusOnly = ! empty($pengajuan['kampus_fakultas']) ? esc($pengajuan['kampus_fakultas']) : esc($pengajuan['nama_komisariat'] ?? '-');
-                                $alamatText = ! empty($pengajuan['alamat']) ? esc($pengajuan['alamat']) : 'Kab. Garut';
+                                $kampusOnly = ! empty($pengajuanData['kampus_fakultas']) ? esc($pengajuanData['kampus_fakultas']) : esc($pengajuanData['nama_komisariat'] ?? '-');
+                                $alamatText = ! empty($pengajuanData['alamat']) ? esc($pengajuanData['alamat']) : 'Kab. Garut';
                                 ?>
-                                <div class="mt-4 text-center">
-                                    <h5 class="mb-3" style="color: #37517e; font-weight: bold;">Pratinjau KTA Digital Anda</h5>
+                                <div class="mt-space-lg">
+                                    <h3 class="font-title-sm text-title-sm text-on-surface font-bold text-center mb-space-md">Pratinjau KTA Digital Anda</h3>
 
-                                    <div id="kta-capture-area" class="kta-preview-wrapper mb-4">
+                                    <div id="kta-capture-area" class="kta-preview-wrapper mb-space-lg">
 
                                         <!-- KARTU DEPAN -->
-                                        <div id="kta-card-front" class="kta-card-box">
-                                            <div class="kta-f-header">
-                                                <?php if ($finalLogoB64 !== '') : ?>
-                                                    <div class="kta-f-logo">
-                                                        <img src="<?= $finalLogoB64 ?>" alt="Logo PMII">
-                                                    </div>
-                                                <?php endif; ?>
-                                                <div class="kta-f-title-group">
-                                                    <div class="kta-f-kicker">Kartu Tanda</div>
-                                                    <div class="kta-f-title">ANGGOTA</div>
-                                                    <div class="kta-f-sub">PERGERAKAN MAHASISWA ISLAM INDONESIA</div>
-                                                    <div class="kta-f-cabang">
-                                                        <span class="kta-f-cabang-line"></span><span class="kta-f-cabang-text">KABUPATEN GARUT</span><span class="kta-f-cabang-line"></span>
+                                        <div class="kta-card-scaler">
+                                            <div id="kta-card-front" class="kta-card-box">
+                                                <div class="kta-f-header">
+                                                    <?php if ($finalLogoB64 !== '') : ?>
+                                                        <div class="kta-f-logo">
+                                                            <img src="<?= $finalLogoB64; ?>" alt="Logo PMII">
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <div class="kta-f-title-group">
+                                                        <div class="kta-f-kicker">Kartu Tanda</div>
+                                                        <div class="kta-f-title">ANGGOTA</div>
+                                                        <div class="kta-f-sub">PERGERAKAN MAHASISWA ISLAM INDONESIA</div>
+                                                        <div class="kta-f-cabang">
+                                                            <span class="kta-f-cabang-line"></span><span class="kta-f-cabang-text">KABUPATEN GARUT</span><span class="kta-f-cabang-line"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="kta-f-foto">
-                                                <?php if (! empty($fotoBase64)) : ?>
-                                                    <img src="<?= $fotoBase64 ?>" style="<?= $fotoImgStyle ?>" alt="Foto Kader">
-                                                <?php else : ?>
-                                                    <div class="kta-f-foto-empty">FOTO 3x4<br>Jas PMII</div>
-                                                <?php endif; ?>
-                                            </div>
+                                                <div class="kta-f-foto">
+                                                    <?php if (! empty($fotoBase64)) : ?>
+                                                        <img src="<?= $fotoBase64; ?>" style="<?= $fotoImgStyle; ?>" alt="Foto Kader">
+                                                    <?php else : ?>
+                                                        <div class="kta-f-foto-empty">FOTO 3x4<br>Jas PMII</div>
+                                                    <?php endif; ?>
+                                                </div>
 
-                                            <div class="kta-f-bio">
-                                                <div class="kta-f-nama"><?= esc($pengajuan['nama_lengkap']) ?></div>
-                                                <div class="kta-f-nia"><span>NIA :</span><?= esc($pengajuan['nomor_kta']) ?></div>
-                                                <div class="kta-f-divider"></div>
-                                                <table class="kta-f-table">
-                                                    <tr>
-                                                        <td class="kta-f-lbl">TTL</td>
-                                                        <td class="kta-f-val"><?= esc($pengajuan['tempat_lahir']) ?>, <?= date('d F Y', strtotime($pengajuan['tanggal_lahir'])) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="kta-f-lbl">ALAMAT</td>
-                                                        <td class="kta-f-val"><?= $alamatText ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="kta-f-lbl">KOMISARIAT</td>
-                                                        <td class="kta-f-val kta-f-val-bold"><?= $kampusOnly ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="kta-f-lbl">RAYON</td>
-                                                        <td class="kta-f-val"><?= esc(! empty($pengajuan['rayon']) ? $pengajuan['rayon'] : '-') ?></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                                                <div class="kta-f-bio">
+                                                    <div class="kta-f-nama"><?= esc($pengajuanData['nama_lengkap']); ?></div>
+                                                    <div class="kta-f-nia"><span>NIA :</span><?= esc($pengajuanData['nomor_kta']); ?></div>
+                                                    <div class="kta-f-divider"></div>
+                                                    <table class="kta-f-table">
+                                                        <tr>
+                                                            <td class="kta-f-lbl">TTL</td>
+                                                            <td class="kta-f-val"><?= esc($pengajuanData['tempat_lahir']); ?>, <?= date('d F Y', strtotime($pengajuanData['tanggal_lahir'])); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="kta-f-lbl">ALAMAT</td>
+                                                            <td class="kta-f-val"><?= $alamatText; ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="kta-f-lbl">KOMISARIAT</td>
+                                                            <td class="kta-f-val kta-f-val-bold"><?= $kampusOnly; ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="kta-f-lbl">RAYON</td>
+                                                            <td class="kta-f-val"><?= esc(! empty($pengajuanData['rayon']) ? $pengajuanData['rayon'] : '-'); ?></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
 
-                                            <div class="kta-f-footer">
-                                                <span class="kta-f-footer-l">Berlaku selama menjadi kader PMII</span>
-                                                <span class="kta-f-footer-r">Dzikir, Fikir dan Amal Sholeh</span>
+                                                <div class="kta-f-footer">
+                                                    <span class="kta-f-footer-l">Berlaku selama menjadi kader PMII</span>
+                                                    <span class="kta-f-footer-r">Dzikir, Fikir dan Amal Sholeh</span>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </div><!-- Penutup scaler Kartu Depan (yang sebelumnya terlewat) -->
 
                                         <!-- KARTU BELAKANG -->
-                                        <div id="kta-card-back" class="kta-card-box">
-                                            <div class="kta-b-header">
-                                                <?php if ($finalLogoB64 !== '') : ?>
-                                                    <div class="kta-b-header-logo">
-                                                        <img src="<?= $finalLogoB64 ?>" alt="Logo">
+                                        <div class="kta-card-scaler">
+                                            <div id="kta-card-back" class="kta-card-box">
+                                                <div class="kta-b-header">
+                                                    <?php if ($finalLogoB64 !== '') : ?>
+                                                        <div class="kta-b-header-logo">
+                                                            <img src="<?= $finalLogoB64; ?>" alt="Logo">
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <span class="kta-b-header-text">PMII CABANG KABUPATEN GARUT</span>
+                                                </div>
+
+                                                <div class="kta-b-tujuan-box">
+                                                    <div class="kta-b-title">Tujuan PMII</div>
+                                                    <div class="kta-b-line"></div>
+                                                    <div class="kta-b-tujuan">
+                                                        Terbentuknya Pribadi Muslim Indonesia yang <strong>Bertaqwa</strong> Kepada Allah SWT,
+                                                        <strong>Berbudi Luhur</strong>, <strong>Berilmu</strong>, <strong>Cakap</strong> dan
+                                                        <strong>Bertanggungjawab</strong> dalam Mengamalkan Ilmunya serta Komitmen
+                                                        Memperjuangkan Cita-Cita Kemerdekaan Indonesia
                                                     </div>
-                                                <?php endif; ?>
-                                                <span class="kta-b-header-text">PMII CABANG KABUPATEN GARUT</span>
-                                            </div>
-
-                                            <div class="kta-b-tujuan-box">
-                                                <div class="kta-b-title">Tujuan PMII</div>
-                                                <div class="kta-b-line"></div>
-                                                <div class="kta-b-tujuan">
-                                                    Terbentuknya Pribadi Muslim Indonesia yang <strong>Bertaqwa</strong> Kepada Allah SWT,
-                                                    <strong>Berbudi Luhur</strong>, <strong>Berilmu</strong>, <strong>Cakap</strong> dan
-                                                    <strong>Bertanggungjawab</strong> dalam Mengamalkan Ilmunya serta Komitmen
-                                                    Memperjuangkan Cita-Cita Kemerdekaan Indonesia
                                                 </div>
-                                            </div>
 
-                                            <div class="kta-b-ttd-area">
-                                                <table class="kta-b-ttd-table">
-                                                    <tr>
-                                                        <td>
-                                                            <div class="kta-b-sign-space">
-                                                                <?php if ($ttdKetuaB64 !== '') : ?>
-                                                                    <img src="<?= $ttdKetuaB64 ?>" alt="TTD Ketua">
+                                                <div class="kta-b-ttd-area">
+                                                    <table class="kta-b-ttd-table">
+                                                        <tr>
+                                                            <td>
+                                                                <div class="kta-b-sign-space">
+                                                                    <?php if ($ttdKetuaB64 !== '') : ?>
+                                                                        <img src="<?= $ttdKetuaB64; ?>" alt="TTD Ketua">
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <div class="kta-b-sign-name">Adrian Hidayat</div>
+                                                                <div class="kta-b-sign-role">KETUA</div>
+                                                            </td>
+                                                            <td style="vertical-align: middle;">
+                                                                <?php if ($stempelB64 !== '') : ?>
+                                                                    <img src="<?= $stempelB64; ?>" class="kta-b-stamp-img" alt="Stempel PC">
                                                                 <?php endif; ?>
-                                                            </div>
-                                                            <div class="kta-b-sign-name">Adrian Hidayat</div>
-                                                            <div class="kta-b-sign-role">KETUA</div>
-                                                        </td>
-                                                        <td style="vertical-align: middle;">
-                                                            <?php if ($stempelB64 !== '') : ?>
-                                                                <img src="<?= $stempelB64 ?>" class="kta-b-stamp-img" alt="Stempel PC">
-                                                            <?php endif; ?>
-                                                        </td>
-                                                        <td>
-                                                            <div class="kta-b-sign-space">
-                                                                <?php if ($ttdSekreB64 !== '') : ?>
-                                                                    <img src="<?= $ttdSekreB64 ?>" alt="TTD Sekretaris">
-                                                                <?php endif; ?>
-                                                            </div>
-                                                            <div class="kta-b-sign-name">Rizky Zidan</div>
-                                                            <div class="kta-b-sign-role">SEKRETARIS</div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-
-                                            <div class="kta-b-ketentuan">
-                                                <div class="kta-b-ketentuan-title">KETENTUAN</div>
-                                                <div class="kta-b-ketentuan-list">
-                                                    1. Kartu ini adalah identitas keanggotaan resmi kader PMII Kabupaten Garut<br>
-                                                    2. Kartu ini dapat digunakan dalam acara-acara resmi organisasi<br>
-                                                    3. Jika kartu ini hilang, harap menghubungi sekretaris PC PMII Kabupaten Garut<br>
-                                                    4. Apabila menyalahgunakan kartu ini, akan dikenakan sanksi organisasi
+                                                            </td>
+                                                            <td>
+                                                                <div class="kta-b-sign-space">
+                                                                    <?php if ($ttdSekreB64 !== '') : ?>
+                                                                        <img src="<?= $ttdSekreB64; ?>" alt="TTD Sekretaris">
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <div class="kta-b-sign-name">Rizky Zidan</div>
+                                                                <div class="kta-b-sign-role">SEKRETARIS</div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </div>
+
+                                                <div class="kta-b-ketentuan">
+                                                    <div class="kta-b-ketentuan-title">KETENTUAN</div>
+                                                    <div class="kta-b-ketentuan-list">
+                                                        1. Kartu ini adalah identitas keanggotaan resmi kader PMII Kabupaten Garut<br>
+                                                        2. Kartu ini dapat digunakan dalam acara-acara resmi organisasi<br>
+                                                        3. Jika kartu ini hilang, harap menghubungi sekretaris PC PMII Kabupaten Garut<br>
+                                                        4. Apabila menyalahgunakan kartu ini, akan dikenakan sanksi organisasi
+                                                    </div>
+                                                </div>
+
+                                                <div class="kta-b-qr">
+                                                    <?php if (! empty($qrBase64)) : ?>
+                                                        <img src="<?= $qrBase64; ?>" alt="QR Verifikasi">
+                                                    <?php endif; ?>
+                                                </div>
+
+                                                <div class="kta-b-footer"></div>
                                             </div>
+                                        </div><!-- Penutup scaler Kartu Belakang -->
 
-                                            <div class="kta-b-qr">
-                                                <?php if (! empty($qrBase64)) : ?>
-                                                    <img src="<?= $qrBase64 ?>" alt="QR Verifikasi">
-                                                <?php endif; ?>
-                                            </div>
+                                    </div><!-- Penutup #kta-capture-area -->
 
-                                            <div class="kta-b-footer"></div>
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Tombol Unduh PDF & JPG -->
-                                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                                        <button type="button" id="btn-download-pdf" class="btn btn-danger px-4 py-2 fw-bold">
-                                            <i class="bx bxs-file-pdf me-1"></i> Unduh KTA (PDF)
+                                    <!-- Download Action Buttons -->
+                                    <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md pt-space-xs">
+                                        <button type="button" id="btn-download-pdf"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs bg-[#c92a2a] hover:bg-[#a61e1e] text-white px-space-lg py-2.5 rounded-lg font-label-md text-label-md shadow-sm transition-all border-0 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                                            <span>Unduh KTA (PDF)</span>
                                         </button>
-                                        <button type="button" id="btn-download-jpg" class="btn btn-success px-4 py-2 fw-bold" style="background-color: #20c997; border-color: #20c997;">
-                                            <i class="bx bx-image me-1"></i> Unduh KTA (JPG)
+                                        <button type="button" id="btn-download-jpg"
+                                            class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs bg-[#007038] hover:bg-[#005a2d] text-white px-space-lg py-2.5 rounded-lg font-label-md text-label-md shadow-sm transition-all border-0 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[20px]">image</span>
+                                            <span>Unduh KTA (JPG)</span>
                                         </button>
                                     </div>
                                 </div>
                             <?php endif; ?>
 
-                        <?php endif; ?>
+                        </div><!-- Penutup #hasil-pencarian-kta -->
+                    <?php endif; ?>
+                </div><!-- Penutup Main Verification Card -->
 
+                <!-- Additional Instructional Help Notice -->
+                <div class="mt-space-lg bg-surface-container-low rounded-2xl p-space-md flex items-start gap-space-md border border-outline-variant/25">
+                    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-[18px]">info</span>
+                    </div>
+                    <div class="flex flex-col text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
+                        <span class="font-title-sm text-title-sm text-on-surface font-semibold mb-0.5">Butuh Perubahan Data Anggota?</span>
+                        <span>Jika terdapat kesalahan penulisan nama, status kaderisasi, atau komisariat pada KTA Digital Anda, silakan ajukan permohonan revisi data melalui sekretariat Biro Kaderisasi PC PMII Kab. Garut atau hubungi pengurus komisariat asal.</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-        </div>
-    </section>
-
+    </div>
 </main>
 
-<!-- Library html2canvas & jsPDF -->
 <!-- Library html2canvas & jsPDF -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const hasilEl = document.getElementById('hasil-pencarian-kta');
+        if (hasilEl) {
+            hasilEl.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Penyesuaian skala pratinjau KTA agar pas di layar HP maupun Laptop
+        const previewWrapper = document.getElementById('kta-capture-area');
+
+        function fitKtaPreviewScale() {
+            if (!previewWrapper) return;
+            const style = window.getComputedStyle(previewWrapper);
+            const padX = parseFloat(style.paddingLeft || 0) + parseFloat(style.paddingRight || 0);
+            const availWidth = previewWrapper.clientWidth - padX;
+            const scale = availWidth < 380 ? Math.max(0.65, availWidth / 380) : 1;
+
+            previewWrapper.querySelectorAll('.kta-card-scaler').forEach((scaler) => {
+                scaler.style.width = (380 * scale) + 'px';
+                scaler.style.height = (240 * scale) + 'px';
+                const card = scaler.querySelector('.kta-card-box');
+                if (card) {
+                    card.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+                }
+            });
+        }
+
+        fitKtaPreviewScale();
+        window.addEventListener('resize', fitKtaPreviewScale);
+
         const btnJpg = document.getElementById('btn-download-jpg');
         const btnPdf = document.getElementById('btn-download-pdf');
-        const fileBaseName = 'KTA_PMII_<?= esc(str_replace('.', '', $pengajuan['nomor_kta'] ?? 'Digital')) ?>';
+        const fileBaseName = 'KTA_PMII_<?= esc(str_replace('.', '', $pengajuanData['nomor_kta'] ?? 'Digital')); ?>';
 
-        // Penyesuaian jarak antarbaris header khusus pada hasil render unduhan (JPG & PDF)
+        // Penyesuaian jarak antarbaris header & reset skala khusus pada hasil render unduhan (JPG & PDF)
         function tuneExportHeader(clonedDoc) {
+            clonedDoc.querySelectorAll('.kta-card-scaler').forEach((scaler) => {
+                scaler.style.width = '380px';
+                scaler.style.height = '240px';
+            });
+            clonedDoc.querySelectorAll('.kta-card-box').forEach((card) => {
+                card.style.transform = 'none';
+            });
+
             const kicker = clonedDoc.querySelector('.kta-f-kicker');
             const title = clonedDoc.querySelector('.kta-f-title');
             const sub = clonedDoc.querySelector('.kta-f-sub');
             const cabang = clonedDoc.querySelector('.kta-f-cabang');
 
-            if (kicker) kicker.style.top = '10px';
-            if (title) title.style.top = '25.5px';
-            if (sub) sub.style.top = '44.5px';
-            if (cabang) cabang.style.top = '55px';
+            if (kicker) kicker.style.top = '8.5px';
+            if (title) title.style.top = '26.5px';
+            if (sub) sub.style.top = '45.5px';
+            if (cabang) cabang.style.top = '55.5px';
+
+            clonedDoc.querySelectorAll('.kta-f-table td').forEach((td) => {
+                td.style.setProperty('vertical-align', 'top', 'important');
+            });
+
+            clonedDoc.querySelectorAll('.kta-f-lbl').forEach((lbl) => {
+                lbl.style.setProperty('width', '65px', 'important');
+                lbl.style.setProperty('padding-top', '2.1px', 'important');
+            });
+
+            clonedDoc.querySelectorAll('.kta-f-val').forEach((val) => {
+                val.style.setProperty('padding-top', '1.6px', 'important');
+            });
         }
 
         if (btnJpg) {
-            btnJpg.addEventListener('click', function() {
+            btnJpg.addEventListener('click', async function() {
                 const target = document.getElementById('kta-capture-area');
-                const defaultLabel = '<i class="bx bx-image me-1"></i> Unduh KTA (JPG)';
+                const defaultLabel = '<span class="material-symbols-outlined text-[20px]">image</span><span>Unduh KTA (JPG)</span>';
 
                 btnJpg.disabled = true;
-                btnJpg.innerHTML = '<i class="bx bx-loader-alt bx-spin me-1"></i> Memproses JPG...';
+                btnJpg.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Memproses JPG...</span>';
 
-                html2canvas(target, {
-                    scale: 4,
-                    backgroundColor: '#f1f5f9',
-                    scrollX: 0,
-                    scrollY: -window.scrollY,
-                    logging: false,
-                    onclone: function(clonedDoc) {
-                        const clonedArea = clonedDoc.getElementById('kta-capture-area');
-                        if (clonedArea) {
-                            clonedArea.style.width = '832px';
-                            clonedArea.style.flexWrap = 'nowrap';
-                            clonedArea.style.padding = '24px';
-                            clonedArea.style.margin = '0';
-                        }
-                        tuneExportHeader(clonedDoc);
+                try {
+                    if (document.fonts && document.fonts.ready) {
+                        await document.fonts.ready;
                     }
-                }).then(function(canvas) {
+
+                    const canvas = await html2canvas(target, {
+                        scale: 4,
+                        useCORS: true,
+                        backgroundColor: '#f2f3ff',
+                        scrollX: 0,
+                        scrollY: -window.scrollY,
+                        logging: false,
+                        onclone: function(clonedDoc) {
+                            const clonedArea = clonedDoc.getElementById('kta-capture-area');
+                            if (clonedArea) {
+                                clonedArea.style.width = '832px';
+                                clonedArea.style.flexWrap = 'nowrap';
+                                clonedArea.style.gap = '24px';
+                                clonedArea.style.padding = '24px';
+                                clonedArea.style.margin = '0';
+                            }
+                            tuneExportHeader(clonedDoc);
+                        }
+                    });
+
                     const link = document.createElement('a');
                     link.download = fileBaseName + '.jpg';
                     link.href = canvas.toDataURL('image/jpeg', 0.98);
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                }).finally(function() {
+                } finally {
                     btnJpg.disabled = false;
                     btnJpg.innerHTML = defaultLabel;
-                });
+                }
             });
         }
 
@@ -807,14 +977,19 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             btnPdf.addEventListener('click', async function() {
                 const cardFront = document.getElementById('kta-card-front');
                 const cardBack = document.getElementById('kta-card-back');
-                const defaultLabel = '<i class="bx bxs-file-pdf me-1"></i> Unduh KTA (PDF)';
+                const defaultLabel = '<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span><span>Unduh KTA (PDF)</span>';
 
                 btnPdf.disabled = true;
-                btnPdf.innerHTML = '<i class="bx bxs-file-pdf me-1"></i> Memproses PDF...';
+                btnPdf.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Memproses PDF...</span>';
 
                 try {
+                    if (document.fonts && document.fonts.ready) {
+                        await document.fonts.ready;
+                    }
+
                     const opts = {
                         scale: 4,
+                        useCORS: true,
                         backgroundColor: '#ffffff',
                         scrollX: 0,
                         scrollY: -window.scrollY,
@@ -842,7 +1017,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
 
                     pdf.save(fileBaseName + '.pdf');
                 } catch (e) {
-                    window.location.href = '<?= base_url('kta/download-pdf/' . ($pengajuan['uuid_token'] ?? '')) ?>';
+                    window.location.href = '<?= base_url('kta/download-pdf/' . ($pengajuanData['uuid_token'] ?? '')); ?>';
                 } finally {
                     btnPdf.disabled = false;
                     btnPdf.innerHTML = defaultLabel;

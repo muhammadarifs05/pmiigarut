@@ -260,11 +260,20 @@ class Kta extends BaseController
     /**
      * Halaman Form Cek Status KTA
      */
+    /**
+     * Halaman Form Cek Status KTA
+     */
     public function cekStatus()
     {
         $data = [
-            'title' => 'Cek Status Pengajuan KTA - PC PMII Garut',
-            'site'  => $this->siteModel->find(1),
+            'title'      => 'Cek Status Pengajuan KTA - PC PMII Garut',
+            'site'       => $this->siteModel->find(1),
+            'pengajuan'  => session()->getFlashdata('hasil_kta_pengajuan'),
+            'nim_input'  => (string) session()->getFlashdata('hasil_kta_nim'),
+            'tgl_input'  => (string) session()->getFlashdata('hasil_kta_tgl'),
+            'qrBase64'   => (string) session()->getFlashdata('hasil_kta_qr'),
+            'fotoBase64' => (string) session()->getFlashdata('hasil_kta_foto'),
+            'logoBase64' => (string) session()->getFlashdata('hasil_kta_logo'),
         ];
 
         return view('kta/cek_status', $data);
@@ -279,7 +288,10 @@ class Kta extends BaseController
         $tanggalLahir = trim((string) $this->request->getPost('tanggal_lahir'));
 
         if ($nim === '' || $tanggalLahir === '') {
-            return redirect()->back()->withInput()->with('error', 'NIM dan Tanggal Lahir wajib diisi.');
+            return redirect()->to('/kta/cek-status')
+                ->with('error', 'NIM dan Tanggal Lahir wajib diisi.')
+                ->with('hasil_kta_nim', $nim)
+                ->with('hasil_kta_tgl', $tanggalLahir);
         }
 
         // Ambil pengajuan terbaru berdasarkan NIM dan Tanggal Lahir
@@ -290,7 +302,10 @@ class Kta extends BaseController
             ->first();
 
         if (! $pengajuan) {
-            return redirect()->back()->withInput()->with('error', 'Data pengajuan tidak ditemukan. Periksa kembali NIM dan Tanggal Lahir Anda.');
+            return redirect()->to('/kta/cek-status')
+                ->with('error', 'Data pengajuan tidak ditemukan. Periksa kembali NIM dan Tanggal Lahir Anda.')
+                ->with('hasil_kta_nim', $nim)
+                ->with('hasil_kta_tgl', $tanggalLahir);
         }
 
         // Ambil nama komisariat & kampus
@@ -319,18 +334,13 @@ class Kta extends BaseController
             }
         }
 
-        $data = [
-            'title'      => 'Hasil Cek Status KTA - PC PMII Garut',
-            'site'       => $this->siteModel->find(1),
-            'pengajuan'  => $pengajuan,
-            'nim_input'  => $nim,
-            'tgl_input'  => $tanggalLahir,
-            'qrBase64'   => $qrBase64,
-            'fotoBase64' => $fotoBase64,
-            'logoBase64' => $logoBase64,
-        ];
-
-        return view('kta/cek_status', $data);
+        return redirect()->to('/kta/cek-status')
+            ->with('hasil_kta_pengajuan', $pengajuan)
+            ->with('hasil_kta_nim', $nim)
+            ->with('hasil_kta_tgl', $tanggalLahir)
+            ->with('hasil_kta_qr', $qrBase64)
+            ->with('hasil_kta_foto', $fotoBase64)
+            ->with('hasil_kta_logo', $logoBase64);
     }
 
     /**

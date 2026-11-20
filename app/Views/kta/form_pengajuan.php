@@ -1,186 +1,397 @@
-<?php
-
-/**
- * @var string $title
- * @var array $komisariat
- */
-?>
 <?= $this->extend('layout/template-home'); ?>
 <?= $this->section('content'); ?>
 
-<main id="main" data-aos="fade-up">
-    <!-- Content Section -->
-    <section id="contact" class="contact">
-        <div class="container" data-aos="fade-up">
+<?php
+$komisariatData = $komisariat ?? [];
+$errorsData     = session()->getFlashdata('errors') ?? [];
+?>
 
-            <div class="section-title">
-                <span class="about-badge">Layanan KTA</span>
-                <h3>Layanan <span>KTA Digital</span></h3>
-                <p>Lengkapi data diri untuk proses penerbitan Kartu Tanda Anggota (KTA) atau cek status pengajuan yang sudah pernah dilakukan.</p>
-            </div>
+<main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <div class="relative w-full overflow-hidden">
+        <!-- Ambient Background Glow -->
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[820px] h-[300px] bg-gradient-to-b from-primary-container/10 via-surface-container/50 to-transparent blur-3xl pointer-events-none -z-10"></div>
 
-            <!-- DUA KOTAK PILIHAN (MIRIP PERMOHONAN SK) -->
-            <div class="row justify-content-center mb-5">
+        <div class="max-w-5xl mx-auto px-gutter py-space-xl flex flex-col gap-space-xl">
 
-                <!-- Kotak 1: Info Pengajuan Baru -->
-                <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-3">
-                    <div style="background: #fff; width: 100%; padding: 30px; border-radius: 8px; box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.08); border-top: 3px solid #106eea;">
-                        <span style="background: #eef4ff; color: #106eea; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-bottom: 15px;">PENGAJUAN BARU</span>
-                        <h4 style="font-weight: bold; color: #37517e; margin-bottom: 15px;">Formulir Pengajuan KTA</h4>
-                        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+            <!-- Hero Headline Section -->
+            <section class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 px-space-md py-1.5 rounded-full bg-surface-container-highest text-primary font-label-xs text-label-xs tracking-widest uppercase shadow-sm mb-space-sm">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span>LAYANAN KTA</span>
+                </div>
+
+                <h1 class="font-headline-xl text-3xl sm:text-4xl lg:text-headline-xl text-on-surface font-extrabold tracking-tight leading-tight m-0">
+                    Layanan <span class="text-primary">KTA Digital</span>
+                </h1>
+
+                <!-- Split Color Bar Indicator -->
+                <div class="flex items-center justify-center gap-1.5 my-space-sm">
+                    <span class="h-1 w-10 bg-primary-container rounded-full"></span>
+                    <span class="h-1 w-6 bg-secondary-container rounded-full"></span>
+                </div>
+
+                <p class="max-w-2xl mx-auto font-body-lg text-sm sm:text-body-lg text-on-surface-variant leading-relaxed m-0">
+                    Lengkapi data diri untuk proses penerbitan Kartu Tanda Anggota (KTA) atau cek status pengajuan yang sudah pernah dilakukan.
+                </p>
+            </section>
+
+            <!-- Dual Informational Cards Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-space-lg" data-aos="fade-up" data-aos-delay="60">
+
+                <!-- Left Card: Pengajuan Baru -->
+                <div class="bg-surface-container-lowest rounded-2xl p-space-lg sm:p-space-xl shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col justify-between border border-outline-variant/30">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-container to-primary"></div>
+                    <div>
+                        <span class="inline-block bg-primary/10 text-primary font-label-xs text-label-xs tracking-wider uppercase px-3 py-1 rounded-md mb-space-sm">
+                            PENGAJUAN BARU
+                        </span>
+                        <h2 class="font-headline-sm text-lg sm:text-xl font-bold text-on-surface mb-space-xs">
+                            Formulir Pengajuan KTA
+                        </h2>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">
                             Pastikan seluruh data diri (NIM, Nama, dan Pasfoto) disiapkan dengan valid agar proses verifikasi berjalan cepat dan akurat.
                         </p>
-                        <ul style="list-style: none; padding: 0; font-size: 13px; color: #555; margin-bottom: 0;">
-                            <li class="mb-2"><i class="bx bx-check text-success me-2"></i> Wajib melampirkan Pasfoto Formal</li>
-                            <li class="mb-2"><i class="bx bx-check text-success me-2"></i> Wajib melampirkan Sertifikat Mapaba</li>
-                            <li><i class="bx bx-check text-success me-2"></i> Data terverifikasi oleh Admin PC PMII Garut</li>
-                        </ul>
                     </div>
+
+                    <ul class="space-y-2.5 pt-space-md border-t border-outline-variant/25 font-body-sm text-body-sm font-medium text-on-surface m-0 p-0 list-none">
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[14px]">check</span>
+                            </span>
+                            <span>Wajib melampirkan Pasfoto Formal</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[14px]">check</span>
+                            </span>
+                            <span>Wajib melampirkan Sertifikat Mapaba</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[14px]">check</span>
+                            </span>
+                            <span>Data terverifikasi oleh Admin PC PMII Garut</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Kotak 2: Cek Status Pengajuan -->
-                <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-3">
-                    <div style="background: #fff; width: 100%; padding: 30px; border-radius: 8px; box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.08); border-top: 3px solid #106eea;">
-                        <span style="background: #eef4ff; color: #106eea; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-bottom: 15px;">SUDAH PERNAH MENGAJUKAN?</span>
-                        <h4 style="font-weight: bold; color: #37517e; margin-bottom: 15px">Cek Status Pengajuan</h4>
-                        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">
-                            Gunakan <strong>NIM dan Tanggal Lahir</strong> Anda untuk memantau status verifikasi serta mengunduh KTA Digital dalam format PDF maupun JPG.
+                <!-- Right Card: Cek Status Pengajuan -->
+                <div class="bg-surface-container-lowest rounded-2xl p-space-lg sm:p-space-xl shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col justify-between border border-outline-variant/30">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-secondary-container to-secondary-fixed-dim"></div>
+                    <div>
+                        <span class="inline-block bg-primary/10 text-primary font-label-xs text-label-xs tracking-wider uppercase px-3 py-1 rounded-md mb-space-sm">
+                            SUDAH PERNAH MENGAJUKAN?
+                        </span>
+                        <h2 class="font-headline-sm text-lg sm:text-xl font-bold text-on-surface mb-space-xs">
+                            Cek Status Pengajuan
+                        </h2>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                            Gunakan <strong class="font-semibold text-on-surface">NIM dan Tanggal Lahir</strong> Anda untuk memantau status verifikasi serta mengunduh KTA Digital dalam format PDF maupun JPG.
                         </p>
-                        <div class="mt-4">
-                            <a href="<?= base_url('kta/cek-status') ?>" class="btn btn-success px-4 py-2" style="background: #205ec9; border-color: #205ec9; font-weight: 600; border-radius: 4px;">
-                                <i class="bx bx-search me-1"></i> Cek Status Pengajuan &rarr;
-                            </a>
-                        </div>
+                    </div>
+
+                    <div class="pt-space-xs">
+                        <a href="<?= base_url('kta/cek-status'); ?>"
+                            class="inline-flex items-center justify-center gap-2 bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-5 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 group">
+                            <span class="material-symbols-outlined text-[18px]">search</span>
+                            <span>Cek Status Pengajuan</span>
+                            <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
                     </div>
                 </div>
 
-            </div>
+            </section>
 
-            <!-- FORMULIR PENGAJUAN DI BAWAHNYA -->
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
+            <!-- Registration Form Container -->
+            <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-outline-variant/30" data-aos="fade-up" data-aos-delay="100">
 
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header text-white py-3" style="background-color: #205ec9;">
-                            <h5 class="mb-0"><i class="bx bx-edit me-2"></i> Formulir Pengajuan KTA Digital</h5>
+                <!-- Form Header Ribbon -->
+                <div class="bg-primary-container px-space-lg py-4 flex items-center gap-2.5 text-white">
+                    <span class="material-symbols-outlined text-[20px] text-white">edit_square</span>
+                    <h3 class="font-title-md text-title-md font-bold tracking-wide text-white m-0">
+                        Formulir Pengajuan KTA Digital
+                    </h3>
+                </div>
+
+                <!-- Main Form Body -->
+                <div class="p-space-lg sm:p-space-xl">
+
+                    <!-- Validation Errors Alert -->
+                    <?php if (! empty($errorsData)) : ?>
+                        <div class="mb-space-lg p-space-md rounded-2xl bg-error-container text-on-error-container font-body-sm text-body-sm shadow-sm">
+                            <div class="flex items-center gap-space-sm font-bold mb-1">
+                                <span class="material-symbols-outlined text-error text-[20px]">warning</span>
+                                <span>Periksa kembali data pengajuan Anda:</span>
+                            </div>
+                            <ul class="list-disc pl-6 m-0 space-y-1">
+                                <?php foreach ($errorsData as $error) : ?>
+                                    <li><?= esc($error); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
-                        <div class="card-body p-4">
+                    <?php endif; ?>
 
-                            <?php if (session()->getFlashdata('errors')) : ?>
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-                                            <li><?= esc($error) ?></li>
-                                        <?php endforeach ?>
-                                    </ul>
-                                </div>
-                            <?php endif ?>
+                    <form action="<?= base_url('kta/store'); ?>" method="post" enctype="multipart/form-data" class="flex flex-col gap-space-md">
+                        <?= csrf_field(); ?>
 
-                            <form action="<?= base_url('kta/store') ?>" method="post" enctype="multipart/form-data">
-                                <?= csrf_field() ?>
+                        <!-- Row 1: NIM and Full Name -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label for="nim" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    NIM / NPM <span class="text-error">*</span>
+                                </label>
+                                <input type="text"
+                                    id="nim"
+                                    name="nim"
+                                    maxlength="30"
+                                    value="<?= esc(old('nim')); ?>"
+                                    placeholder="Masukkan NIM/NPM Anda"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="nim" class="form-label fw-bold">NIM / NPM <span class="text-danger">*</span></label>
-                                        <input type="text" name="nim" class="form-control" id="nim" maxlength="30" placeholder="Masukkan NIM/NPM Anda" value="<?= esc(old('nim')) ?>" required>
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="nama_lengkap" class="form-label fw-bold">Nama Lengkap (Sesuai KTP) <span class="text-danger">*</span></label>
-                                        <input type="text" name="nama_lengkap" class="form-control" id="nama_lengkap" value="<?= esc(old('nama_lengkap')) ?>" required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="email" class="form-label fw-bold">Email Aktif <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control" id="email" placeholder="nama@email.com" value="<?= esc(old('email')) ?>" required>
-                                        <small class="text-muted">Notifikasi KTA terbit akan dikirim ke alamat email ini.</small>
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="no_hp" class="form-label fw-bold">No. HP / WhatsApp <span class="text-danger">*</span></label>
-                                        <input type="text" name="no_hp" class="form-control" id="no_hp" maxlength="20" placeholder="08xxxxxxxxxx" value="<?= esc(old('no_hp')) ?>" required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="tempat_lahir" class="form-label fw-bold">Tempat Lahir</label>
-                                        <input type="text" name="tempat_lahir" class="form-control" id="tempat_lahir" value="<?= old('tempat_lahir') ?>" required>
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="tanggal_lahir" class="form-label fw-bold">Tanggal Lahir</label>
-                                        <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir" value="<?= old('tanggal_lahir') ?>" required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-12 mb-3">
-                                        <label for="alamat" class="form-label fw-bold">Alamat Lengkap</label>
-                                        <input type="text" name="alamat" class="form-control" id="alamat" value="<?= old('alamat') ?>" required placeholder="Contoh: Jl. Pembangunan No. 12, Tarogong Kidul, Kab. Garut">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="jenis_kelamin" class="form-label fw-bold">Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" class="form-control" id="jenis_kelamin" required>
-                                            <option value="">-- Pilih Jenis Kelamin --</option>
-                                            <option value="L" <?= old('jenis_kelamin') == 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                                            <option value="P" <?= old('jenis_kelamin') == 'P' ? 'selected' : '' ?>>Perempuan</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="komisariat_id" class="form-label fw-bold">Asal Komisariat</label>
-                                        <select name="komisariat_id" class="form-control" id="komisariat_id" required>
-                                            <option value="">-- Pilih Komisariat --</option>
-                                            <?php foreach (($komisariat ?? []) as $k) : ?>
-                                                <option value="<?= $k['id'] ?>" <?= old('komisariat_id') == $k['id'] ? 'selected' : '' ?>>
-                                                    <?= esc($k['nama_komisariat']) ?>
-                                                </option>
-                                            <?php endforeach ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="rayon" class="form-label fw-bold">Asal Rayon (Opsional)</label>
-                                        <input type="text" name="rayon" class="form-control" id="rayon" value="<?= old('rayon') ?>" placeholder="Contoh: Rayon Tarbiyah">
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="tahun_mapaba" class="form-label fw-bold">Tahun Pelaksanaan Mapaba</label>
-                                        <input type="number" name="tahun_mapaba" class="form-control" id="tahun_mapaba" min="2000" max="<?= date('Y') ?>" value="<?= old('tahun_mapaba', date('Y')) ?>" required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="pas_foto" class="form-label fw-bold">Pasfoto Formal 3x4, Latar Biru (Format JPG/PNG, Max 2MB)</label>
-                                        <input type="file" name="pas_foto" class="form-control" id="pas_foto" accept="image/*" required>
-                                        <small class="text-muted d-block mt-1">
-                                            Gunakan pasfoto resmi berjas PMII dengan ukuran foto <strong>3x4</strong> (ukuran ideal <strong>450 × 600 piksel</strong>). <strong>Latar Belakang Biru.</strong>
-                                        </small>
-                                    </div>
-                                    <div class="form-group col-md-6 mb-3">
-                                        <label for="berkas_bukti" class="form-label fw-bold">Bukti Sertifikat Mapaba (JPG/PNG/PDF, Max 2MB)</label>
-                                        <input type="file" name="berkas_bukti" class="form-control" id="berkas_bukti" accept="image/*,.pdf" required>
-                                    </div>
-                                </div>
-
-                                <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold" style="background: #106eea; border: 0; border-radius: 4px; color: #fff;">Kirim Pengajuan KTA</button>
-                                </div>
-                            </form>
-
+                            <div>
+                                <label for="nama_lengkap" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Nama Lengkap (Sesuai KTP) <span class="text-error">*</span>
+                                </label>
+                                <input type="text"
+                                    id="nama_lengkap"
+                                    name="nama_lengkap"
+                                    value="<?= esc(old('nama_lengkap')); ?>"
+                                    placeholder="Masukkan nama lengkap sesuai KTP"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- Row 2: Email and WhatsApp -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label for="email" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Email Aktif <span class="text-error">*</span>
+                                </label>
+                                <input type="email"
+                                    id="email"
+                                    name="email"
+                                    value="<?= esc(old('email')); ?>"
+                                    placeholder="nama@email.com"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                                <p class="font-label-xs text-label-xs text-on-surface-variant mt-1.5 m-0">
+                                    Notifikasi KTA terbit akan dikirim ke alamat email ini.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label for="no_hp" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    No. HP / WhatsApp <span class="text-error">*</span>
+                                </label>
+                                <input type="tel"
+                                    id="no_hp"
+                                    name="no_hp"
+                                    maxlength="20"
+                                    value="<?= esc(old('no_hp')); ?>"
+                                    placeholder="08xxxxxxxxxx"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Place & Date of Birth -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label for="tempat_lahir" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Tempat Lahir <span class="text-error">*</span>
+                                </label>
+                                <input type="text"
+                                    id="tempat_lahir"
+                                    name="tempat_lahir"
+                                    value="<?= esc(old('tempat_lahir')); ?>"
+                                    placeholder="Contoh: Garut"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
+
+                            <div>
+                                <label for="tanggal_lahir" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Tanggal Lahir <span class="text-error">*</span>
+                                </label>
+                                <input type="date"
+                                    id="tanggal_lahir"
+                                    name="tanggal_lahir"
+                                    value="<?= esc(old('tanggal_lahir')); ?>"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Full Address -->
+                        <div>
+                            <label for="alamat" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                Alamat Lengkap <span class="text-error">*</span>
+                            </label>
+                            <input type="text"
+                                id="alamat"
+                                name="alamat"
+                                value="<?= esc(old('alamat')); ?>"
+                                placeholder="Contoh: Jl. Pembangunan No. 12, Tarogong Kidul, Kab. Garut"
+                                required
+                                class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                        </div>
+
+                        <!-- Row 5: Gender and Komisariat -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label for="jenis_kelamin" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Jenis Kelamin <span class="text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select id="jenis_kelamin"
+                                        name="jenis_kelamin"
+                                        required
+                                        class="w-full h-11 appearance-none px-space-md pr-10 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30 cursor-pointer">
+                                        <option value="">-- Pilih Jenis Kelamin --</option>
+                                        <option value="L" <?= old('jenis_kelamin') === 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                                        <option value="P" <?= old('jenis_kelamin') === 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                                    </select>
+                                    <span class="material-symbols-outlined text-outline text-[20px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="komisariat_id" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Asal Komisariat <span class="text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select id="komisariat_id"
+                                        name="komisariat_id"
+                                        required
+                                        class="w-full h-11 appearance-none px-space-md pr-10 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30 cursor-pointer">
+                                        <option value="">-- Pilih Komisariat --</option>
+                                        <?php foreach ($komisariatData as $k) : ?>
+                                            <option value="<?= esc((string) $k['id']); ?>" <?= old('komisariat_id') == $k['id'] ? 'selected' : ''; ?>>
+                                                <?= esc($k['nama_komisariat']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <span class="material-symbols-outlined text-outline text-[20px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 6: Rayon and Mapaba Year -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label for="rayon" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Asal Rayon (Opsional)
+                                </label>
+                                <input type="text"
+                                    id="rayon"
+                                    name="rayon"
+                                    value="<?= esc(old('rayon')); ?>"
+                                    placeholder="Contoh: Rayon Tarbiyah"
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
+
+                            <div>
+                                <label for="tahun_mapaba" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Tahun Pelaksanaan Mapaba <span class="text-error">*</span>
+                                </label>
+                                <input type="number"
+                                    id="tahun_mapaba"
+                                    name="tahun_mapaba"
+                                    min="2000"
+                                    max="<?= date('Y'); ?>"
+                                    value="<?= esc((string) old('tahun_mapaba', date('Y'))); ?>"
+                                    required
+                                    class="w-full h-11 px-space-md rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md font-medium focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container outline-none transition border border-outline-variant/30" />
+                            </div>
+                        </div>
+
+                        <!-- Row 7: File Uploads -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+                            <!-- Pasfoto Upload -->
+                            <div>
+                                <label for="pas_foto" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Pasfoto Formal 3×4, Latar Biru (Format JPG/PNG, Max 2MB) <span class="text-error">*</span>
+                                </label>
+                                <div class="relative flex items-center bg-surface-container-low/80 border border-outline-variant/40 rounded-xl p-1.5 cursor-pointer hover:border-primary-container transition">
+                                    <input type="file"
+                                        id="pas_foto"
+                                        name="pas_foto"
+                                        accept="image/png, image/jpeg, image/jpg"
+                                        required
+                                        class="kta-file-input absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+                                    <span class="font-label-xs text-label-xs text-on-surface bg-surface-container-lowest py-1.5 px-3 rounded-lg border border-outline-variant/40 shadow-2xs shrink-0 pointer-events-none">
+                                        Choose File
+                                    </span>
+                                    <span class="file-name-display font-body-sm text-body-sm text-outline ml-3 truncate pointer-events-none">
+                                        Belum ada file dipilih
+                                    </span>
+                                </div>
+                                <p class="font-label-xs text-label-xs text-on-surface-variant mt-1.5 leading-snug m-0">
+                                    Gunakan pasfoto resmi berjas PMII dengan ukuran foto <strong class="text-on-surface">3×4</strong> (ukuran ideal <strong class="text-on-surface">450 × 600 piksel</strong>). <strong class="text-on-surface">Latar Belakang Biru.</strong>
+                                </p>
+                            </div>
+
+                            <!-- Bukti Sertifikat Upload -->
+                            <div>
+                                <label for="berkas_bukti" class="block font-label-sm text-label-sm text-on-surface mb-space-xs">
+                                    Bukti Sertifikat Mapaba (JPG/PNG/PDF, Max 2MB) <span class="text-error">*</span>
+                                </label>
+                                <div class="relative flex items-center bg-surface-container-low/80 border border-outline-variant/40 rounded-xl p-1.5 cursor-pointer hover:border-primary-container transition">
+                                    <input type="file"
+                                        id="berkas_bukti"
+                                        name="berkas_bukti"
+                                        accept="image/png, image/jpeg, image/jpg, application/pdf"
+                                        required
+                                        class="kta-file-input absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+                                    <span class="font-label-xs text-label-xs text-on-surface bg-surface-container-lowest py-1.5 px-3 rounded-lg border border-outline-variant/40 shadow-2xs shrink-0 pointer-events-none">
+                                        Choose File
+                                    </span>
+                                    <span class="file-name-display font-body-sm text-body-sm text-outline ml-3 truncate pointer-events-none">
+                                        Belum ada file dipilih
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button Action -->
+                        <div class="pt-space-md flex justify-center">
+                            <button type="submit"
+                                class="w-full sm:w-auto min-w-[260px] bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-8 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 border-0 cursor-pointer active:scale-95">
+                                <span>Kirim Pengajuan KTA</span>
+                                <span class="material-symbols-outlined text-[18px]">send</span>
+                            </button>
+                        </div>
+                    </form>
 
                 </div>
-            </div>
+            </section>
 
         </div>
-    </section>
-
+    </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.kta-file-input').forEach((input) => {
+            input.addEventListener('change', () => {
+                const label = input.parentElement?.querySelector('.file-name-display');
+                if (!label) return;
+
+                if (input.files && input.files[0]) {
+                    label.textContent = input.files[0].name;
+                    label.classList.remove('text-outline');
+                    label.classList.add('text-primary', 'font-medium');
+                } else {
+                    label.textContent = 'Belum ada file dipilih';
+                    label.classList.add('text-outline');
+                    label.classList.remove('text-primary', 'font-medium');
+                }
+            });
+        });
+    });
+</script>
 
 <?= $this->endSection(); ?>

@@ -199,12 +199,14 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             position: absolute;
             top: 10px;
             left: 0;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Georgia, 'Times New Roman', serif !important;
             font-style: italic;
             font-weight: 700;
             font-size: 12.5px;
             color: #f3c430;
-            line-height: 1;
+            line-height: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .kta-f-title {
@@ -215,7 +217,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             font-weight: 800;
             letter-spacing: 1.4px;
             color: #ffffff;
-            line-height: 1;
+            line-height: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .kta-f-sub {
@@ -226,7 +230,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             font-weight: 700;
             letter-spacing: 0.65px;
             color: #ffffff;
-            line-height: 1;
+            line-height: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .kta-f-cabang {
@@ -237,7 +243,9 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             font-weight: 700;
             letter-spacing: 2px;
             color: #f3c430;
-            line-height: 1;
+            line-height: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .kta-f-cabang-line {
@@ -277,26 +285,29 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
 
         .kta-f-bio {
             position: absolute;
-            top: 85px;
+            top: 84px;
             left: 112px;
             right: 16px;
         }
 
         .kta-f-nama {
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Georgia, 'Times New Roman', serif !important;
             font-size: 15.5px;
             font-weight: 700;
             color: #0b2c6b;
-            line-height: 1.1;
+            line-height: 1.15 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .kta-f-nia {
             font-size: 9.8px;
             font-weight: 700;
             color: #1565c0;
-            margin-top: 2px;
+            margin: 2px 0 0 0 !important;
+            padding: 0 !important;
             letter-spacing: 0.5px;
-            line-height: 1.15;
+            line-height: 1.15 !important;
         }
 
         .kta-f-nia span {
@@ -307,36 +318,52 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
         .kta-f-divider {
             height: 1px;
             background: #d4af37;
-            margin: 5px 0;
+            margin: 5px 0 !important;
+            padding: 0 !important;
         }
 
-        .kta-f-table {
-            width: 100%;
-            font-size: 8.4px;
-            border-collapse: collapse;
+        .kta-f-table,
+        .kta-f-table tbody,
+        .kta-f-table tr {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-collapse: collapse !important;
+            background: transparent !important;
         }
 
         .kta-f-table td {
-            padding: 1.8px 0;
-            vertical-align: top;
+            padding: 1.6px 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            vertical-align: baseline !important;
+            font-family: Arial, Helvetica, sans-serif !important;
+            line-height: 1.25 !important;
         }
 
         .kta-f-lbl {
-            width: 68px;
-            font-size: 7.1px;
-            font-weight: 700;
-            color: #6c7a9c;
-            letter-spacing: 0.5px;
+            width: 62px !important;
+            padding-right: 6px !important;
+            font-size: 7.4px !important;
+            font-weight: 700 !important;
+            color: #6c7a9c !important;
+            letter-spacing: 0.4px !important;
+            text-transform: uppercase !important;
         }
 
         .kta-f-val {
-            color: #1e293b;
-            line-height: 1.2;
+            font-size: 8.3px !important;
+            font-weight: 500 !important;
+            color: #1e293b !important;
+            line-height: 1.25 !important;
         }
 
         .kta-f-val-bold {
-            font-weight: 700;
-            color: #0b2c6b;
+            font-size: 8.3px !important;
+            font-weight: 700 !important;
+            color: #0b2c6b !important;
         }
 
         .kta-f-footer {
@@ -357,19 +384,19 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             color: #ffffff;
             font-weight: 600;
             letter-spacing: 0.2px;
-            line-height: 1;
+            line-height: 1 !important;
         }
 
         .kta-f-footer-r {
             position: absolute;
             top: 5px;
             right: 18px;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Georgia, 'Times New Roman', serif !important;
             font-style: italic;
             font-weight: 700;
             font-size: 8px;
             color: #f3c430;
-            line-height: 1;
+            line-height: 1 !important;
         }
 
         /* ================= KARTU BELAKANG (100% Identik dengan Pengunjung) ================= */
@@ -406,7 +433,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 1.2px;
-            line-height: 1;
+            line-height: 1 !important;
         }
 
         .kta-b-tujuan-box {
@@ -414,29 +441,29 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             top: 37px;
             left: 18px;
             right: 18px;
-            text-align: center;
+            text-align: center !important;
         }
 
         .kta-b-title {
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Georgia, 'Times New Roman', serif !important;
             font-style: italic;
             font-weight: 700;
             font-size: 14px;
             color: #0b2c6b;
-            line-height: 1.1;
+            line-height: 1.1 !important;
         }
 
         .kta-b-line {
             width: 34px;
             height: 1.5px;
             background: #f3c430;
-            margin: 3px auto 5px auto;
+            margin: 3px auto 5px auto !important;
         }
 
         .kta-b-tujuan {
             font-size: 7.7px;
             color: #334155;
-            line-height: 1.36;
+            line-height: 1.36 !important;
         }
 
         .kta-b-tujuan strong {
@@ -450,34 +477,49 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             right: 24px;
         }
 
-        .kta-b-ttd-table {
-            width: 100%;
-            border-collapse: collapse;
+        .kta-b-ttd-table,
+        .kta-b-ttd-table tbody,
+        .kta-b-ttd-table tr {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-collapse: collapse !important;
+            background: transparent !important;
         }
 
         .kta-b-ttd-table td {
-            width: 33.33%;
-            text-align: center;
-            vertical-align: bottom;
+            width: 33.33% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+            text-align: center !important;
+            vertical-align: bottom !important;
         }
 
         .kta-b-sign-space {
             height: 30px;
             margin-bottom: -4px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .kta-b-sign-space img {
             height: 30px;
             width: auto;
+            margin: 0 auto !important;
+            display: block !important;
         }
 
         .kta-b-sign-name {
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Georgia, 'Times New Roman', serif !important;
             font-size: 9px;
             font-weight: 700;
             color: #0b2c6b;
             text-decoration: underline;
+            line-height: 1.2 !important;
         }
 
         .kta-b-sign-role {
@@ -486,12 +528,14 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             color: #64748b;
             letter-spacing: 1.1px;
             margin-top: 1px;
+            line-height: 1.1 !important;
         }
 
         .kta-b-stamp-img {
             height: 38px;
             width: auto;
-            vertical-align: middle;
+            margin: 0 auto !important;
+            display: block !important;
         }
 
         .kta-b-ketentuan {
@@ -499,7 +543,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             bottom: 15px;
             left: 16px;
             width: 280px;
-            text-align: left;
+            text-align: left !important;
         }
 
         .kta-b-ketentuan-title {
@@ -508,30 +552,37 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             color: #c59b27;
             letter-spacing: 0.8px;
             margin-bottom: 1.5px;
+            line-height: 1.1 !important;
         }
 
         .kta-b-ketentuan-list {
             font-size: 6.3px;
             color: #334155;
-            line-height: 1.34;
+            line-height: 1.34 !important;
         }
 
         .kta-b-qr {
             position: absolute;
             bottom: 15px;
             right: 16px;
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border: 1.5px solid #0c44a6;
             border-radius: 6px;
-            padding: 2px;
+            padding: 3px;
             background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .kta-b-qr img {
-            width: 35px;
-            height: 35px;
-            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            display: block !important;
+            image-rendering: pixelated;
         }
 
         .kta-b-footer {
@@ -588,7 +639,7 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
 
             <div class="kta-f-bio">
                 <div class="kta-f-nama"><?= esc($kader['nama_lengkap'] ?? '-') ?></div>
-                <div class="kta-f-nia"><span>NIA  :</span><?= esc($kader['nomor_kta'] ?? '-') ?></div>
+                <div class="kta-f-nia"><span>NIA :</span><?= esc($kader['nomor_kta'] ?? '-') ?></div>
                 <div class="kta-f-divider"></div>
                 <table class="kta-f-table">
                     <tr>
@@ -701,20 +752,39 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
             const overlay = document.getElementById('loading-overlay');
             const iframe = document.getElementById('pdf-viewer-frame');
 
+            if (document.fonts && document.fonts.ready) {
+                await document.fonts.ready;
+            }
+
+            // Samakan persis dengan pengaturan di halaman Cek Status Pengunjung
             function tuneExportHeader(clonedDoc) {
                 const kicker = clonedDoc.querySelector('.kta-f-kicker');
                 const title = clonedDoc.querySelector('.kta-f-title');
                 const sub = clonedDoc.querySelector('.kta-f-sub');
                 const cabang = clonedDoc.querySelector('.kta-f-cabang');
 
-                if (kicker) kicker.style.top = '10px';
-                if (title) title.style.top = '25.5px';
-                if (sub) sub.style.top = '44.5px';
-                if (cabang) cabang.style.top = '55px';
+                if (kicker) kicker.style.top = '8.5px';
+                if (title) title.style.top = '26.5px';
+                if (sub) sub.style.top = '45.5px';
+                if (cabang) cabang.style.top = '55.5px';
+
+                clonedDoc.querySelectorAll('.kta-f-table td').forEach((td) => {
+                    td.style.setProperty('vertical-align', 'top', 'important');
+                });
+
+                clonedDoc.querySelectorAll('.kta-f-lbl').forEach((lbl) => {
+                    lbl.style.setProperty('width', '65px', 'important');
+                    lbl.style.setProperty('padding-top', '2.1px', 'important');
+                });
+
+                clonedDoc.querySelectorAll('.kta-f-val').forEach((val) => {
+                    val.style.setProperty('padding-top', '1.6px', 'important');
+                });
             }
 
             const opts = {
                 scale: 4,
+                useCORS: true,
                 backgroundColor: '#ffffff',
                 scrollX: 0,
                 scrollY: 0,
@@ -756,7 +826,8 @@ if (! empty($fotoBase64) && strpos($fotoBase64, 'base64,') !== false) {
                 btnJpg.disabled = true;
                 const canvasBoth = await html2canvas(captureArea, {
                     scale: 4,
-                    backgroundColor: '#f1f5f9',
+                    useCORS: true,
+                    backgroundColor: '#f2f3ff',
                     scrollX: 0,
                     scrollY: 0,
                     logging: false,
